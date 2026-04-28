@@ -19,6 +19,8 @@ class InputHandler {
     bool around_value(int reference_value, int compared_value);
 
   public:
+    InputHandler();
+
     enum button_press {
         none,
         left_button_press,

@@ -1,18 +1,36 @@
 #include <Arduino.h>
+#include"input_hander.hpp"
 
-// put function declarations here:
-int myFunction(int, int);
+InputHandler* input_handler;
+
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  input_handler = new InputHandler();
+
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+
+  
+  InputHandler::button_press button_input = input_handler->button_check();
+
+  switch (button_input){
+    case InputHandler::left_button_press:
+      // volume down
+      break;
+    case InputHandler::left_button_long_press:
+      // previous song
+      break;
+    case InputHandler::middle_button_press:
+      // pause/play song
+      break;
+    case InputHandler::right_button_press:
+      // volume up
+      break;
+    case InputHandler::right_button_long_press:
+      // next song
+    default:
+      break;  
+  }
 }

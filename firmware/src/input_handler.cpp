@@ -29,6 +29,11 @@ class InputHandler {
     }
 
   public:
+
+    InputHandler(){
+      pinMode(PinConfig::BUTTON_PANEL, INPUT);
+    }
+
     enum button_press {
         none,
         left_button_press,
