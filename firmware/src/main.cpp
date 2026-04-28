@@ -11,8 +11,6 @@ void setup() {
 
 void loop() {
 
-
-  
   InputHandler::button_press button_input = input_handler->button_check();
 
   switch (button_input){
