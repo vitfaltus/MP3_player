@@ -3,20 +3,20 @@
 #include "pin_config.hpp"
 
 
-class Audio_settings {
+class AudioSettings {
   AudioOutputI2S* amp;
   double volume_level = 0.3;
   const double VOLUME_DIFF = 0.05;
 
   public:
 
-  Audio_settings(){
+  AudioSettings(){
     amp = new AudioOutputI2S();
     amp->SetPinout(PinConfig::I2S_BCLK, PinConfig::I2S_LRC, PinConfig::I2S_DOUT);
     amp->SetGain(volume_level);  // volume (0.0–1.0)
   }
 
-  ~Audio_settings(){
+  ~AudioSettings(){
     if (amp){
         delete amp;
     }

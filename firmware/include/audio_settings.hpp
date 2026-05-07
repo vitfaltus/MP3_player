@@ -2,13 +2,13 @@
 #include "AudioOutputI2S.h"
 
 
-class Audio_settings {
+class AudioSettings {
   AudioOutputI2S* amp;
   double volume_level = 0.3;
   const double VOLUME_DIFF = 0.05;
   public:
-  Audio_settings();
-  ~Audio_settings();
+  AudioSettings();
+  ~AudioSettings();
 
   double volume_up();
 
