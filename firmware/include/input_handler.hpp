@@ -1,20 +1,20 @@
 
 class InputHandler {
 
-    const int no_press_value;
+    const int no_press_value = 940;
 
-    const int left_analog_value;
-    const int middle_analog_value;
-    const int right_analog_value;
+    const int left_analog_value = 1060;
+    const int middle_analog_value = 1200;
+    const int right_analog_value = 1800;
 
-    const int long_press_treshold;
-    const int short_press_treshold;
+    const int long_press_treshold = 10000;
+    const int short_press_treshold = 50;
 
-    char debounce_timer_left;
-    char debounce_timer_middle;
-    char debounce_timer_right;
+    char debounce_timer_left = 0;
+    char debounce_timer_middle = 0;
+    char debounce_timer_right = 0;
 
-    char debounce_timer_treshhold;
+    char debounce_timer_treshhold = 10;
 
     bool around_value(int reference_value, int compared_value);
 
