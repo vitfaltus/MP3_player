@@ -16,15 +16,20 @@ char* Playlist::add_dir_slash(const char* s){
     return out;
 }
 
-
-Playlist::Playlist(const char* root_path) {
-    Serial.println("Starting playlist creation");
-    strncpy(m_root_path, root_path, strlen(root_path));
-    Serial.println("Starting playlist creation");
-    File root_path_file = SD.open(m_root_path);
+void Playlist::CreateSequentialPlaylist(const char* path){
+    //Serial.println("Starting playlist creation");
+    //strncpy(m_root_path, path, strlen(path)); TODO: fix path copy
+    //Serial.println("Starting playlist creation");
+    File root_path_file = SD.open(path);
     Serial.println("Starting playlist creation");
     CreatePlaylist(root_path_file);
     Serial.println("Playlist created");
+}
+
+
+
+Playlist::Playlist(const char* path) {
+    this->CreateSequentialPlaylist(path);
     m_paused = false;
 }
 
@@ -43,8 +48,10 @@ Playlist::~Playlist(){
     }
 }
 
+
+
 void Playlist::AddSong(const char* path){
-    char* slash_name = add_dir_slash(path);
+    char* slash_name = add_dir_slash(path); // TODO : incorrect usage of char *
     if (!slash_name) {return;}
 
     Song* new_song = new Song(slash_name);
@@ -106,6 +113,7 @@ void Playlist::CreatePlaylist(File& current_dir){
             continue;
         }
         else{     
+            Serial.println("Adding song");
             AddSong(entry.name());
             Serial.print("Song ");
             Serial.print(entry.name());

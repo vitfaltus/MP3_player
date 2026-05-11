@@ -9,11 +9,13 @@ class Playlist{
     bool m_paused;
 
     char* add_dir_slash(const char* s);
+    void CreateSequentialPlaylist(const char* path);
 
     public:
 
-    Playlist(const char* root_path);
+    Playlist(const char* path);
     ~Playlist();
+    
     void AddSong(const char* path);
     void Play();
     void Stop();

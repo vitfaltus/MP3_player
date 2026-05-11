@@ -25,15 +25,20 @@ void setup() {
   Serial.begin(9600);
 
   Serial.println("Setting up filesystem");
-  filesys_setup();
-  Serial.println("Filesystem set up");
-
+  if (filesys_setup()){
+    Serial.println("Filesystem set up");
+  }
+  else {
+    Serial.println("Filesystem failed to set up");
+  }
+  
   Serial.println("Creating components");
 
   input_handler = new InputHandler();
   audio_settings = new AudioSettings();
   Serial.println("Creating playlist");
-  playlist = new Playlist("/\0");
+  const char* playlist_path = "/";
+  playlist = new Playlist(playlist_path);
 
 }
 
