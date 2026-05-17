@@ -14,7 +14,7 @@ class Song{
 
     public:
 
-    Song(char* song_path);
+    Song(const char* song_path);
 
     ~Song();
 
@@ -28,6 +28,8 @@ class Song{
 
     void stop();
     void play(AudioOutputI2S* audio_output);
+
+    char* get_song_path();
 
     void free_buffer();
     

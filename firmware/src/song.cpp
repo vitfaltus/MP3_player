@@ -3,8 +3,8 @@
 #include "AudioOutputI2S.h"
 #include "song.hpp"
 
-Song::Song(char* song_path){
-    memcpy(m_song_path, song_path, strlen(song_path));
+Song::Song(const char* song_path){
+    m_song_path = strdup(song_path);
 }
 
 Song::~Song(){
@@ -65,6 +65,10 @@ void Song::play(AudioOutputI2S* audio_output){
         m_mp3 = new AudioGeneratorMP3();
     }
     m_mp3->begin(m_file, audio_output);
+}
+
+char* Song::get_song_path(){
+    return m_song_path;
 }
 
 void Song::free_buffer(){

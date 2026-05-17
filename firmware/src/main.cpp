@@ -37,15 +37,16 @@ void setup() {
   input_handler = new InputHandler();
   audio_settings = new AudioSettings();
   Serial.println("Creating playlist");
-  const char* playlist_path = "/";
-  playlist = new Playlist(playlist_path);
+  playlist = new Playlist("/");
+  
+  Serial.println("Systems set up");
 
 }
 
 void loop() {
 
   InputHandler::button_press button_input = input_handler->button_check();
-
+  Serial.println(button_input);
   switch (button_input){
     case InputHandler::left_button_press: // volume down
       audio_settings->volume_down();

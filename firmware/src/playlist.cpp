@@ -17,11 +17,8 @@ char* Playlist::add_dir_slash(const char* s){
 }
 
 void Playlist::CreateSequentialPlaylist(const char* path){
-    //Serial.println("Starting playlist creation");
-    //strncpy(m_root_path, path, strlen(path)); TODO: fix path copy
-    //Serial.println("Starting playlist creation");
+    m_root_path = strdup(path);
     File root_path_file = SD.open(path);
-    Serial.println("Starting playlist creation");
     CreatePlaylist(root_path_file);
     Serial.println("Playlist created");
 }
@@ -29,6 +26,8 @@ void Playlist::CreateSequentialPlaylist(const char* path){
 
 
 Playlist::Playlist(const char* path) {
+    m_current_song = nullptr;
+    m_root_path = nullptr;
     this->CreateSequentialPlaylist(path);
     m_paused = false;
 }
@@ -51,22 +50,26 @@ Playlist::~Playlist(){
 
 
 void Playlist::AddSong(const char* path){
-    char* slash_name = add_dir_slash(path); // TODO : incorrect usage of char *
+    char* slash_name = add_dir_slash(path); 
     if (!slash_name) {return;}
 
     Song* new_song = new Song(slash_name);
+    Serial.print("Song created: ");
+    Serial.println(new_song->get_song_path());
+      
 
     if (m_current_song == nullptr){
         m_current_song = new_song;
     }
       
     else{
+
         while(m_current_song->get_next_song() != nullptr){
             m_current_song = m_current_song->get_next_song();
         }
-    
-    m_current_song->set_next_song(new_song);
-    new_song->set_previous_song(m_current_song);
+
+        m_current_song->set_next_song(new_song);
+        new_song->set_previous_song(m_current_song);
     }
 }
 
@@ -104,7 +107,6 @@ void Playlist::PlayPreviousSong(){
 
 void Playlist::CreatePlaylist(File& current_dir){
     while(true){
-        Serial.println("Creating loop");
         File entry = current_dir.openNextFile();
         if (!entry){
             return;
@@ -113,12 +115,7 @@ void Playlist::CreatePlaylist(File& current_dir){
             continue;
         }
         else{     
-            Serial.println("Adding song");
-            AddSong(entry.name());
-            Serial.print("Song ");
-            Serial.print(entry.name());
-            Serial.println(" created");
-
+            this->AddSong(entry.name());
         }
     }
 }
