@@ -46,7 +46,7 @@ void setup() {
 void loop() {
 
   InputHandler::button_press button_input = input_handler->button_check();
-  Serial.println(button_input);
+  //Serial.println(button_input);
   switch (button_input){
     case InputHandler::left_button_press: // volume down
       audio_settings->volume_down();

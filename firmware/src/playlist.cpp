@@ -29,7 +29,7 @@ Playlist::Playlist(const char* path) {
     m_current_song = nullptr;
     m_root_path = nullptr;
     this->CreateSequentialPlaylist(path);
-    m_paused = false;
+    m_paused = true;
 }
 
 Playlist::~Playlist(){
@@ -54,8 +54,6 @@ void Playlist::AddSong(const char* path){
     if (!slash_name) {return;}
 
     Song* new_song = new Song(slash_name);
-    Serial.print("Song created: ");
-    Serial.println(new_song->get_song_path());
       
 
     if (m_current_song == nullptr){
@@ -64,12 +62,14 @@ void Playlist::AddSong(const char* path){
       
     else{
 
-        while(m_current_song->get_next_song() != nullptr){
-            m_current_song = m_current_song->get_next_song();
+        Song * tmp = m_current_song;
+
+        while(tmp->get_next_song() != nullptr){
+            tmp = tmp->get_next_song();
         }
 
-        m_current_song->set_next_song(new_song);
-        new_song->set_previous_song(m_current_song);
+        tmp->set_next_song(new_song);
+        new_song->set_previous_song(tmp);
     }
 }
 
