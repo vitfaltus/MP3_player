@@ -55,3 +55,7 @@
     return m_real_volume_level;
   }
 
+
+  AudioOutputI2S* AudioSettings::get_audio_output(){
+    return amp;
+  }

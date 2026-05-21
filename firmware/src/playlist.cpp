@@ -1,5 +1,6 @@
 #include <SD.h>
 #include "playlist.hpp"
+#include "audio_settings.hpp"
 
 char* Playlist::add_dir_slash(const char* s){
     size_t len = strlen(s);
@@ -73,11 +74,14 @@ void Playlist::AddSong(const char* path){
     }
 }
 
-void Playlist::Play(){
+
+void Playlist::Play(AudioSettings * audio){
     m_paused = false;
+    m_current_song->play(audio->get_audio_output());
 }
 
 void Playlist::Stop(){
+    m_current_song->stop();
     m_paused = true;
 }
 

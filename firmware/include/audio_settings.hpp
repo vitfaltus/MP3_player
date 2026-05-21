@@ -1,6 +1,8 @@
 
 #include "AudioOutputI2S.h"
 
+#pragma once
+
 
 class AudioSettings {
   AudioOutputI2S* amp;
@@ -23,5 +25,7 @@ class AudioSettings {
   void restore_audio();
 
   double get_volume();
+
+  AudioOutputI2S* get_audio_output();
 
 };

@@ -1,3 +1,5 @@
+#include "audio_settings.hpp"
+
 #include "song.hpp"
 #include <SD.h>
 
@@ -17,7 +19,7 @@ class Playlist{
     ~Playlist();
     
     void AddSong(const char* path);
-    void Play();
+    void Play(AudioSettings* audio);
     void Stop();
     bool IsPaused();
     void PlaylistLoop();

@@ -46,7 +46,9 @@ void setup() {
 void loop() {
 
   InputHandler::button_press button_input = input_handler->button_check();
-  //Serial.println(button_input);
+  if (button_input !=  InputHandler::button_press::none){
+    Serial.println(button_input);
+  }
   switch (button_input){
     case InputHandler::left_button_press: // volume down
       audio_settings->volume_down();
@@ -56,8 +58,9 @@ void loop() {
       break;
     case InputHandler::middle_button_press: // pause/play song
       if (playlist->IsPaused()){
-        playlist->Play();
+        playlist->Play(audio_settings);
         audio_settings->restore_audio();
+        Serial.println("audio restored");
       }
       else{
         playlist->Stop();
