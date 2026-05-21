@@ -2,7 +2,7 @@
 #include "pin_config.hpp"
 #include "input_handler.hpp"
 
-#define ERROR_MARGIN_ANALOG_READ 100
+#define ERROR_MARGIN_ANALOG_READ 60
 
     
 
@@ -21,14 +21,13 @@
 
     InputHandler::button_press InputHandler::button_check(){
       
-      const int div_cons = 16;
-      int button_panel_value = 0;
 
       for (int i = 0; i < div_cons; i++){
         button_panel_value += analogRead(PinConfig::BUTTON_PANEL);
       }
       button_panel_value /= div_cons;
       
+      //Serial.println(button_panel_value);
 
       if (InputHandler::around_value(no_press_value, button_panel_value)){        
         if (debounce_timer_left > debounce_timer_treshhold){
@@ -43,6 +42,11 @@
           debounce_timer_right = 0;
           return InputHandler::button_press::right_button_press;
         }
+        else{
+          debounce_timer_left = 0;
+          debounce_timer_middle = 0;
+          debounce_timer_right = 0;
+        }
       }
       if (around_value(left_analog_value, button_panel_value)){
         
@@ -52,7 +56,7 @@
         
         debounce_timer_middle++;
       }
-      else if (button_panel_value > 1600){
+      else if (around_value(right_analog_value, button_panel_value)){
         debounce_timer_right++;
       }
       else{
