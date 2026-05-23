@@ -54,7 +54,7 @@ void loop() {
       audio_settings->volume_down();
       break;
     case InputHandler::left_button_long_press: // previous song
-      playlist->PlayPreviousSong();
+      playlist->PlayPreviousSong(audio_settings);
       break;
     case InputHandler::middle_button_press: // pause/play song
       if (playlist->IsPaused()){
@@ -71,10 +71,10 @@ void loop() {
       audio_settings->volume_up();
       break;
     case InputHandler::right_button_long_press: // next song
-      playlist->PlayNextSong();
+      playlist->PlayNextSong(audio_settings);
       break;
     default:
       break;  
   }
-  playlist->PlaylistLoop();
+  playlist->PlaylistLoop(audio_settings);
 }

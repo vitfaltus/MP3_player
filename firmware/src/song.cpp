@@ -46,6 +46,7 @@ bool Song::is_playing(){
     if (m_mp3->isRunning()){
         if (!m_mp3->loop()){
             m_mp3->stop();
+            free_buffer();
             return false;
         }
         return true;

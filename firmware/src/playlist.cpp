@@ -89,23 +89,47 @@ bool Playlist::IsPaused(){
     return m_paused;
 }
 
-void Playlist::PlaylistLoop(){
+void Playlist::PlaylistLoop(AudioSettings* audio){
     if (!m_paused){
         if (!m_current_song->is_playing()){
-            PlayNextSong();
+            PlayNextSong(audio);
         }
     }
 }
 
-void Playlist::PlayNextSong(){
-    if (m_current_song->get_next_song()){
-        m_current_song = m_current_song->get_next_song();
+void Playlist::PlayNextSong(AudioSettings* audio){
+    Song * next_song = m_current_song->get_next_song();
+    
+    if (next_song){
+
+        m_current_song->free_buffer();
+
+        m_current_song = next_song;
+        m_current_song->play(audio->get_audio_output());
+
+        Serial.print("Now playing ");
+        Serial.println(m_current_song->get_song_path());
+    }
+    else{
+        Serial.println("No next song");
     }
 }
 
-void Playlist::PlayPreviousSong(){
-    if (m_current_song->get_previous_song()){
-        m_current_song = m_current_song->get_previous_song();
+void Playlist::PlayPreviousSong(AudioSettings* audio){
+    Song * previous_song = m_current_song->get_previous_song();
+
+    if (previous_song){
+
+        m_current_song->free_buffer();
+
+        m_current_song = previous_song;
+        m_current_song->play(audio->get_audio_output());
+
+        Serial.print("Now playing ");
+        Serial.println(m_current_song->get_song_path());
+    }
+    else{
+        Serial.println("No previous song");
     }
 }
 
@@ -120,14 +144,6 @@ void Playlist::CreatePlaylist(File& current_dir){
         }
         else{     
             this->AddSong(entry.name());
-            Serial.println(entry.name());
         }
-    }
-
-    Song * tmp = m_current_song;
-
-    while (tmp){
-        Serial.println(tmp->get_song_path());
-        tmp = tmp->get_next_song();
     }
 }

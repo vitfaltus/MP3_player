@@ -22,8 +22,8 @@ class Playlist{
     void Play(AudioSettings* audio);
     void Stop();
     bool IsPaused();
-    void PlaylistLoop();
-    void PlayNextSong();
-    void PlayPreviousSong();
+    void PlaylistLoop(AudioSettings* audio);
+    void PlayNextSong(AudioSettings* audio);
+    void PlayPreviousSong(AudioSettings* audio);
     void CreatePlaylist(File& current_dir);
 };
