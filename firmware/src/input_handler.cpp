@@ -29,23 +29,19 @@
       
       //Serial.println(button_panel_value);
 
-      if (InputHandler::around_value(no_press_value, button_panel_value)){        
+      if (InputHandler::around_value(no_press_value, button_panel_value)){ // button possibly released    
         if (debounce_timer_left > debounce_timer_treshhold){
-          debounce_timer_left = 0;
-          return InputHandler::button_press::left_button_press;
+          Serial.println(debounce_timer_left);
+          return handle_left_release();
         }
         if ( debounce_timer_middle > debounce_timer_treshhold ){
-          debounce_timer_middle = 0;
-          return InputHandler::button_press::middle_button_press;
+          return handle_middle_release();
         }
         if ( debounce_timer_right > debounce_timer_treshhold ){
-          debounce_timer_right = 0;
-          return InputHandler::button_press::right_button_press;
+          return handle_right_release();
         }
         else{
-          debounce_timer_left = 0;
-          debounce_timer_middle = 0;
-          debounce_timer_right = 0;
+          clear_debounces();
         }
       }
       if (around_value(left_analog_value, button_panel_value)){
@@ -60,9 +56,43 @@
         debounce_timer_right++;
       }
       else{
-        debounce_timer_left = 0;
-        debounce_timer_middle = 0;
-        debounce_timer_right = 0;
+        clear_debounces();
       }
       return InputHandler::button_press::none;
     }
+
+
+InputHandler::button_press InputHandler::handle_left_release(){
+  
+  if (debounce_timer_left > long_press_treshold){
+    debounce_timer_left = 0;
+    return InputHandler::button_press::left_button_long_press;
+  }
+  debounce_timer_left = 0;
+  return InputHandler::button_press::left_button_press;
+}
+
+InputHandler::button_press InputHandler::handle_middle_release(){
+  if (debounce_timer_middle > long_press_treshold){
+    debounce_timer_middle = 0;
+    return InputHandler::button_press::middle_button_long_press;
+  }
+  debounce_timer_middle = 0;
+  return InputHandler::button_press::middle_button_press;
+}
+
+InputHandler::button_press InputHandler::handle_right_release(){
+  if (debounce_timer_right > long_press_treshold){
+    debounce_timer_right = 0;
+    return InputHandler::button_press::right_button_long_press;
+  }
+  debounce_timer_right = 0;
+  return InputHandler::button_press::right_button_press;
+}
+
+void InputHandler::clear_debounces(){
+  debounce_timer_left = 0;
+  debounce_timer_middle = 0;
+  debounce_timer_right = 0;
+}
+
