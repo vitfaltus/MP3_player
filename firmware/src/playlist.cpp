@@ -113,13 +113,21 @@ void Playlist::CreatePlaylist(File& current_dir){
     while(true){
         File entry = current_dir.openNextFile();
         if (!entry){
-            return;
+            break;
         }
         if (entry.isDirectory()){
             continue;
         }
         else{     
             this->AddSong(entry.name());
+            Serial.println(entry.name());
         }
+    }
+
+    Song * tmp = m_current_song;
+
+    while (tmp){
+        Serial.println(tmp->get_song_path());
+        tmp = tmp->get_next_song();
     }
 }

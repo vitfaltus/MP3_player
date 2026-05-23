@@ -7,6 +7,8 @@ Song::Song(const char* song_path){
     m_song_path = strdup(song_path);
     m_mp3 = nullptr;
     m_file = nullptr;
+    m_previous_song = nullptr;
+    m_next_song = nullptr;
 }
 
 Song::~Song(){
@@ -52,20 +54,12 @@ bool Song::is_playing(){
 }
 
 void Song::stop(){
-    if (m_file && m_mp3){
-        m_mp3->stop();
-        m_file->close();
-        delete m_mp3;
-    }
+    free_buffer();
 }
 
 void Song::play(AudioOutputI2S* audio_output){
-    if (!m_file){
-        m_file = new AudioFileSourceSD(m_song_path);
-    }
-    if (!m_mp3){
-        m_mp3 = new AudioGeneratorMP3();
-    }
+    m_file = new AudioFileSourceSD(m_song_path);
+    m_mp3 = new AudioGeneratorMP3();
     Serial.println("Starting again");
     m_mp3->begin(m_file, audio_output);
 }
@@ -76,9 +70,13 @@ char* Song::get_song_path(){
 
 void Song::free_buffer(){
     if (m_file){
+        m_file->close();
         delete m_file;
+        m_file = nullptr;
     }
     if (m_mp3){
+        m_mp3->stop();
         delete m_mp3;
+        m_mp3 = nullptr;
     }
 }
