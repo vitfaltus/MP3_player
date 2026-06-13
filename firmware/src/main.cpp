@@ -4,13 +4,13 @@
 #include "audio_settings.hpp"
 #include "playlist.hpp"
 #include "display_handler.hpp"
-
-#define TMP_VOLTAGE 3.7
+#include "battery_manager.hpp"
 
 InputHandler* input_handler;
 AudioSettings* audio_settings;
 Playlist* playlist;
 DisplayHandler* display_handler;
+BatteryManager* battery_manager;
 
 bool filesys_setup(){
   SPI.begin(PinConfig::SD_SCK, PinConfig::SD_MISO, PinConfig::SD_MOSI);
@@ -32,6 +32,8 @@ void setup() {
   display_handler = new DisplayHandler();
   Serial.println("Display set up");
 
+  battery_manager = new BatteryManager();
+
   Serial.println("Setting up filesystem");
   if (filesys_setup()){
     Serial.println("Filesystem set up");
@@ -52,13 +54,16 @@ void setup() {
   Serial.println("Systems set up");
 
   display_handler->change_song_name(playlist->GetSongName());
-  display_handler->change_battery_voltage(3.7);
+  display_handler->change_battery_voltage(battery_manager->get_battery_voltage());
 
   input_handler->buttons_calibration();
   Serial.println("Buttons calibrated");
 
 }
 
+
+unsigned long last_millis = 0;
+int read_interval_millis = 5000;
 void loop() {
 
   InputHandler::button_press button_input = input_handler->button_check();
@@ -97,4 +102,9 @@ void loop() {
       break;  
   }
   playlist->PlaylistLoop(audio_settings);
+  unsigned long now_millis = millis();
+  if (now_millis - last_millis > read_interval_millis) {
+    display_handler->change_battery_voltage(battery_manager->get_battery_voltage());
+    last_millis = now_millis;
+  }
 }
