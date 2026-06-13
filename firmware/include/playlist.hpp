@@ -10,7 +10,7 @@ class Playlist{
     Song* m_current_song;
     bool m_paused;
 
-    char* add_dir_slash(const char* s);
+    static char* add_dir_slash(const char* s);
     void CreateSequentialPlaylist(const char* path);
 
     public:
@@ -21,7 +21,7 @@ class Playlist{
     void AddSong(const char* path);
     void Play(AudioSettings* audio);
     void Stop();
-    bool IsPaused();
+    bool IsPaused() const;
     void PlaylistLoop(AudioSettings* audio);
     void PlayNextSong(AudioSettings* audio);
     void PlayPreviousSong(AudioSettings* audio);

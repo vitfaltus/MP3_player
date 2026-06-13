@@ -61,7 +61,7 @@ void Song::stop(){
 void Song::play(AudioOutputI2S* audio_output){
     m_file = new AudioFileSourceSD(m_song_path);
     m_mp3 = new AudioGeneratorMP3();
-    Serial.println("Starting again");
+    Serial.println("Started playing");
     m_mp3->begin(m_file, audio_output);
 }
 

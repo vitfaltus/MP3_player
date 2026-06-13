@@ -2,10 +2,10 @@
 #include "playlist.hpp"
 #include "audio_settings.hpp"
 
-char* Playlist::add_dir_slash(const char* s){
-    size_t len = strlen(s);
+char* Playlist::add_dir_slash(const char* s) {
+  const size_t len = strlen(s);
 
-    char* out = (char*)malloc(len + 2); 
+    char* out = static_cast<char *>(malloc(len + 2));
     if (!out) {
         Serial.println("Path name not allocated");
         return nullptr;
@@ -85,7 +85,7 @@ void Playlist::Stop(){
     m_paused = true;
 }
 
-bool Playlist::IsPaused(){
+bool Playlist::IsPaused() const{
     return m_paused;
 }
 
@@ -97,15 +97,16 @@ void Playlist::PlaylistLoop(AudioSettings* audio){
     }
 }
 
-void Playlist::PlayNextSong(AudioSettings* audio){
-    Song * next_song = m_current_song->get_next_song();
-    
-    if (next_song){
+void Playlist::PlayNextSong(AudioSettings* audio) {
+
+  if (Song *next_song = m_current_song->get_next_song()){
 
         m_current_song->free_buffer();
 
         m_current_song = next_song;
-        m_current_song->play(audio->get_audio_output());
+        if (!m_paused) {
+            m_current_song->play(audio->get_audio_output());
+        }
 
         Serial.print("Now playing ");
         Serial.println(m_current_song->get_song_path());
@@ -115,15 +116,17 @@ void Playlist::PlayNextSong(AudioSettings* audio){
     }
 }
 
-void Playlist::PlayPreviousSong(AudioSettings* audio){
-    Song * previous_song = m_current_song->get_previous_song();
+void Playlist::PlayPreviousSong(AudioSettings* audio) {
 
-    if (previous_song){
+  if (Song *previous_song = m_current_song->get_previous_song()){
 
         m_current_song->free_buffer();
 
         m_current_song = previous_song;
-        m_current_song->play(audio->get_audio_output());
+        if (!m_paused) {
+            m_current_song->play(audio->get_audio_output());
+        }
+
 
         Serial.print("Now playing ");
         Serial.println(m_current_song->get_song_path());
