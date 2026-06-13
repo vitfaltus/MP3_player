@@ -3,10 +3,14 @@
 #include "input_handler.hpp"
 #include "audio_settings.hpp"
 #include "playlist.hpp"
+#include "display_handler.hpp"
+
+#define TMP_VOLTAGE 3.7
 
 InputHandler* input_handler;
 AudioSettings* audio_settings;
 Playlist* playlist;
+DisplayHandler* display_handler;
 
 bool filesys_setup(){
   SPI.begin(PinConfig::SD_SCK, PinConfig::SD_MISO, PinConfig::SD_MOSI);
@@ -23,6 +27,10 @@ bool filesys_setup(){
 
 void setup() {
   Serial.begin(9600);
+
+  Serial.println("Display setup");
+  display_handler = new DisplayHandler();
+  Serial.println("Display set up");
 
   Serial.println("Setting up filesystem");
   if (filesys_setup()){
@@ -43,6 +51,9 @@ void setup() {
 
   Serial.println("Systems set up");
 
+  display_handler->change_song_name(playlist->GetSongName());
+  display_handler->change_battery_voltage(3.7);
+
   input_handler->buttons_calibration();
   Serial.println("Buttons calibrated");
 
@@ -62,6 +73,7 @@ void loop() {
       break;
     case InputHandler::left_button_long_press: // previous song
       playlist->PlayPreviousSong(audio_settings);
+      display_handler->change_song_name(playlist->GetSongName());
       break;
     case InputHandler::middle_button_press: // pause/play song
       if (playlist->IsPaused()){
@@ -79,6 +91,7 @@ void loop() {
       break;
     case InputHandler::right_button_long_press: // next song
       playlist->PlayNextSong(audio_settings);
+      display_handler->change_song_name(playlist->GetSongName());
       break;
     default:
       break;  

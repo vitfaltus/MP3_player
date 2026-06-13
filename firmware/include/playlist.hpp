@@ -26,4 +26,8 @@ class Playlist{
     void PlayNextSong(AudioSettings* audio);
     void PlayPreviousSong(AudioSettings* audio);
     void CreatePlaylist(File& current_dir);
+
+    char* GetSongName() {
+        return m_current_song->get_song_path();
+    }
 };

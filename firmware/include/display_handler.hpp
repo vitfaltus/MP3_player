@@ -2,22 +2,25 @@
 // Created by archer on 09.06.26.
 //
 
-#include <Wire.h>
-#include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
-class display {
+
+class DisplayHandler {
   Adafruit_SSD1306 display;
-  int width, height;
+  int m_width = 128, m_height = 64;
+  float m_battery_voltage = 0;
+  char * m_song_name = nullptr;
+  char * m_artist_name = nullptr;
+  void draw_on_boot();
+  char* parse_name(const char * song_path);
+
   public:
-  display();
+  DisplayHandler();
+    ~DisplayHandler();
+  void change_song_name(const char *song_path);
+  void change_battery_voltage(float battery_voltage);
+  void update_screen(const char * song_name, float battery_voltage);
 
 };
 
-#ifndef FIRMWARE_DISPLAY_HPP
-#define FIRMWARE_DISPLAY_HPP
-
-#endif // FIRMWARE_DISPLAY_HPP
