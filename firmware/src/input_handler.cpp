@@ -2,7 +2,6 @@
 #include "pin_config.hpp"
 #include "input_handler.hpp"
 
-#define ERROR_MARGIN_ANALOG_READ 60
 
     
 
@@ -20,75 +19,85 @@
 
 
     InputHandler::button_press InputHandler::button_check(){
-      
 
-      for (int i = 0; i < div_cons; i++){
-        button_panel_value += analogRead(PinConfig::BUTTON_PANEL);
-      }
-      button_panel_value /= div_cons;
+      get_button_panel_value();
       
       //Serial.println(button_panel_value);
 
-      if (InputHandler::around_value(no_press_value, button_panel_value)){ // button possibly released    
-        if (debounce_timer_left > debounce_timer_treshhold){
-          Serial.println(debounce_timer_left);
+      if (around_value(no_press_value, button_panel_value)){ // button possibly released
+        if (debounce_timer_left > short_press_treshold){
           return handle_left_release();
         }
-        if ( debounce_timer_middle > debounce_timer_treshhold ){
+        if ( debounce_timer_middle > short_press_treshold ){
           return handle_middle_release();
         }
-        if ( debounce_timer_right > debounce_timer_treshhold ){
+        if ( debounce_timer_right > short_press_treshold ){
           return handle_right_release();
         }
-        else{
-          clear_debounces();
-        }
+        clear_debounces();
+
       }
       if (around_value(left_analog_value, button_panel_value)){
-        
+
         debounce_timer_left++;
       }
       else if (around_value(middle_analog_value, button_panel_value) ){
-        
+
         debounce_timer_middle++;
       }
       else if (around_value(right_analog_value, button_panel_value)){
         debounce_timer_right++;
       }
-      else{
-        clear_debounces();
-      }
-      return InputHandler::button_press::none;
+
+      return none;
     }
+    void InputHandler::buttons_calibration() {}
 
-
-InputHandler::button_press InputHandler::handle_left_release(){
+    InputHandler::button_press InputHandler::handle_left_release(){
   
   if (debounce_timer_left > long_press_treshold){
-    debounce_timer_left = 0;
-    return InputHandler::button_press::left_button_long_press;
+    clear_debounces();
+    return left_button_long_press;
   }
-  debounce_timer_left = 0;
-  return InputHandler::button_press::left_button_press;
+
+      clear_debounces();
+      return left_button_press;
 }
 
 InputHandler::button_press InputHandler::handle_middle_release(){
   if (debounce_timer_middle > long_press_treshold){
-    debounce_timer_middle = 0;
-    return InputHandler::button_press::middle_button_long_press;
+    clear_debounces();
+    return middle_button_long_press;
   }
-  debounce_timer_middle = 0;
-  return InputHandler::button_press::middle_button_press;
+  clear_debounces();
+  return middle_button_press;
 }
 
 InputHandler::button_press InputHandler::handle_right_release(){
   if (debounce_timer_right > long_press_treshold){
-    debounce_timer_right = 0;
-    return InputHandler::button_press::right_button_long_press;
+    clear_debounces();
+    return right_button_long_press;
   }
-  debounce_timer_right = 0;
-  return InputHandler::button_press::right_button_press;
+      clear_debounces();
+  return right_button_press;
 }
+
+void InputHandler::get_button_panel_value() {
+      button_panel_value = 0;
+
+      for (int i = 0; i < div_cons; i++){
+        button_panel_value += analogRead(PinConfig::BUTTON_PANEL);
+      }
+      button_panel_value /= div_cons;
+
+      // Serial.print(debounce_timer_left);
+      // Serial.print(", ");
+      // Serial.print(debounce_timer_middle);
+      // Serial.print(", ");
+      // Serial.print(debounce_timer_right);
+      // Serial.print(" ; ");
+      // Serial.println(button_panel_value);
+    }
 
 void InputHandler::clear_debounces(){
   debounce_timer_left = 0;

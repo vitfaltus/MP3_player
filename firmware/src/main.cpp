@@ -36,17 +36,24 @@ void setup() {
 
   input_handler = new InputHandler();
   audio_settings = new AudioSettings();
+
+
   Serial.println("Creating playlist");
   playlist = new Playlist("/");
-  
+
   Serial.println("Systems set up");
+
+  input_handler->buttons_calibration();
+  Serial.println("Buttons calibrated");
 
 }
 
 void loop() {
 
   InputHandler::button_press button_input = input_handler->button_check();
+
   if (button_input !=  InputHandler::button_press::none){
+
     Serial.println(button_input);
   }
   switch (button_input){
