@@ -23,14 +23,18 @@ DisplayHandler::~DisplayHandler() {
 }
 void DisplayHandler::change_song_name(const char *song_path) {
   m_song_name = parse_name(song_path);
-  update_screen(m_song_name, m_battery_voltage);
+  update_screen(m_song_name, m_battery_voltage, m_volume_level);
 }
 void DisplayHandler::change_battery_voltage(float battery_voltage) {
   m_battery_voltage = battery_voltage;
-  update_screen(m_song_name, battery_voltage);
+  update_screen(m_song_name, battery_voltage, m_volume_level);
+}
+void DisplayHandler::change_volume_level(float volume_level) {
+  m_volume_level = volume_level;
+  update_screen(m_song_name, m_battery_voltage, m_volume_level);
 }
 
-void DisplayHandler::update_screen(const char * song_name, float battery_voltage) {
+void DisplayHandler::update_screen(const char * song_name, float battery_voltage, float volume_level) {
   display.clearDisplay();
   display.setTextSize(1);
 
@@ -48,15 +52,23 @@ void DisplayHandler::update_screen(const char * song_name, float battery_voltage
     display.setCursor(19, 35);
     display.setTextWrap(true);
     display.println(song_name);
-    display.display();
+
+    display.setCursor(2, 3);
+    display.println("Vol");
+    display.setCursor(25, 3);
+    display.println(volume_level);
+
+  display.display();
+
+
 }
 void DisplayHandler::draw_on_boot() {
   display.clearDisplay();
 
-  display.setTextSize(2);
-  display.setCursor(10, 20);
+  display.setTextSize(3);
+  display.setCursor(40, 20);
   display.setTextColor(WHITE);
-  display.println("Booting");
+  display.println(":3");
   display.display();
 }
 char* DisplayHandler::parse_name(const char *song_path) {

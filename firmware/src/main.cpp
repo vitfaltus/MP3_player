@@ -55,6 +55,7 @@ void setup() {
 
   display_handler->change_song_name(playlist->GetSongName());
   display_handler->change_battery_voltage(battery_manager->get_battery_voltage());
+  display_handler->change_battery_voltage(audio_settings->get_volume());
 
   input_handler->buttons_calibration();
   Serial.println("Buttons calibrated");
@@ -75,6 +76,7 @@ void loop() {
   switch (button_input){
     case InputHandler::left_button_press: // volume down
       audio_settings->volume_down();
+      display_handler->change_volume_level(audio_settings->get_volume());
       break;
     case InputHandler::left_button_long_press: // previous song
       playlist->PlayPreviousSong(audio_settings);
@@ -93,6 +95,7 @@ void loop() {
       break;
     case InputHandler::right_button_press: // volume up
       audio_settings->volume_up();
+      display_handler->change_volume_level(audio_settings->get_volume());
       break;
     case InputHandler::right_button_long_press: // next song
       playlist->PlayNextSong(audio_settings);
