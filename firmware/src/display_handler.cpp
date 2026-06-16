@@ -6,7 +6,7 @@
 DisplayHandler::DisplayHandler() {
   this->display = Adafruit_SSD1306(m_width, m_height, &Wire, -1);
 
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
     Serial.println(F("SSD1306 allocation failed"));
   }
   delay(15);
@@ -52,40 +52,34 @@ void DisplayHandler::draw_pause() {
   display.setTextWrap(false);
 
   display.fillRect(55, 2, 30, 10, 0x0000);
-  display.setCursor(55,2);
+  display.setCursor(55, 2);
   display.println("Psd");
   display.display();
-
 }
 void DisplayHandler::draw_play() {
   display.setTextWrap(false);
   display.fillRect(55, 2, 30, 10, 0x0000);
-  display.setCursor(55,2);
+  display.setCursor(55, 2);
   display.println("Ply");
   display.display();
-
 }
-void DisplayHandler::dim_screen(const bool cond) {
-  display.dim(cond);
-}
+void DisplayHandler::dim_screen(const bool cond) { display.dim(cond); }
 
 void DisplayHandler::draw_song_template() {
   display.clearDisplay();
   display.setTextSize(1);
 
-    display.setTextWrap(false);
-    display.setCursor(87, 3);
-    display.println("Bat:");
+  display.setTextWrap(false);
+  display.setCursor(87, 3);
+  display.println("Bat:");
 
-    display.setCursor(5, 17);
-    display.println("Now playing:");
+  display.setCursor(5, 17);
+  display.println("Now playing:");
 
-    display.setCursor(2, 3);
-    display.println("Vol");
+  display.setCursor(2, 3);
+  display.println("Vol");
 
   display.display();
-
-
 }
 void DisplayHandler::draw_on_boot() {
   display.clearDisplay();
@@ -96,7 +90,7 @@ void DisplayHandler::draw_on_boot() {
   display.println(":3");
   display.display();
 }
-char* DisplayHandler::parse_name(const char *song_path) {
+char *DisplayHandler::parse_name(const char *song_path) {
   size_t last_slash_idx = 0;
   size_t current_idx = 0;
   while (song_path[current_idx] != '\0') {
@@ -112,6 +106,6 @@ char* DisplayHandler::parse_name(const char *song_path) {
 
   const char *tmp_name = new char[last_slash_idx + 1]();
   tmp_name = song_path + last_slash_idx + 1;
-  char* song_name = strdup(tmp_name);
+  char *song_name = strdup(tmp_name);
   return song_name;
 }

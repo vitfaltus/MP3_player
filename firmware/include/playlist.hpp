@@ -3,31 +3,28 @@
 #include "song.hpp"
 #include <SD.h>
 
-class Playlist{
+class Playlist {
 
-    char* m_root_path;
+  char *m_root_path;
 
-    Song* m_current_song;
-    bool m_paused;
+  Song *m_current_song;
+  bool m_paused;
 
-    static char* add_dir_slash(const char* s);
-    void CreateSequentialPlaylist(const char* path);
+  static char *add_dir_slash(const char *s);
+  void CreateSequentialPlaylist(const char *path);
 
-    public:
+public:
+  Playlist(const char *path);
+  ~Playlist();
 
-    Playlist(const char* path);
-    ~Playlist();
-    
-    void AddSong(const char* path);
-    void Play(AudioSettings* audio);
-    void Stop();
-    bool IsPaused() const;
-    void PlaylistLoop(AudioSettings* audio);
-    void PlayNextSong(AudioSettings* audio);
-    void PlayPreviousSong(AudioSettings* audio);
-    void CreatePlaylist(File& current_dir);
+  void AddSong(const char *path);
+  void Play(AudioSettings *audio);
+  void Stop();
+  bool IsPaused() const;
+  void PlaylistLoop(AudioSettings *audio);
+  void PlayNextSong(AudioSettings *audio);
+  void PlayPreviousSong(AudioSettings *audio);
+  void CreatePlaylist(File &current_dir);
 
-    char* GetSongName() {
-        return m_current_song->get_song_path();
-    }
+  char *GetSongName() { return m_current_song->get_song_path(); }
 };

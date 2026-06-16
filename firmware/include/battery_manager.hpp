@@ -5,7 +5,7 @@
 class BatteryManager {
   const float min_battery_threshold = 3.4;
 
-  public:
+public:
   BatteryManager();
-    static float get_battery_voltage();
+  static float get_battery_voltage();
 };

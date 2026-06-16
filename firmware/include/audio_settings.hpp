@@ -3,14 +3,14 @@
 
 #pragma once
 
-
 class AudioSettings {
-  AudioOutputI2S* amp;
+  AudioOutputI2S *amp;
   double m_real_volume_level = 0.3;
   double m_virtual_volume_level;
 
   const double VOLUME_DIFF = 0.05;
-  public:
+
+public:
   AudioSettings();
   ~AudioSettings();
 
@@ -26,6 +26,5 @@ class AudioSettings {
 
   double get_volume();
 
-  AudioOutputI2S* get_audio_output();
-
+  AudioOutputI2S *get_audio_output();
 };
