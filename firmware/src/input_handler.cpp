@@ -2,8 +2,8 @@
 #include "pin_config.hpp"
 #include <Arduino.h>
 
-bool InputHandler::around_value(int reference_value, int compared_value) {
-  if (std::abs(reference_value - compared_value) < ERROR_MARGIN_ANALOG_READ) {
+bool InputHandler::around_value(int reference_value, int compared_value) const {
+  if (std::abs(reference_value - compared_value) < analog_read_error_margin) {
     return true;
   }
   return false;
@@ -19,16 +19,16 @@ InputHandler::button_press InputHandler::button_check() {
 
   if (around_value(no_press_value,
                    button_panel_value)) { // button possibly released
-    if (debounce_timer_left > short_press_treshold) {
+    if (debounce_timer_left > short_press_threshold) {
       return handle_left_release();
     }
-    if (debounce_timer_middle > short_press_treshold) {
+    if (debounce_timer_middle > short_press_threshold) {
       return handle_middle_release();
     }
-    if (debounce_timer_right > short_press_treshold) {
+    if (debounce_timer_right > short_press_threshold) {
       return handle_right_release();
     }
-    clear_debounces();
+    clear_debounce_timers();
   }
   if (around_value(left_analog_value, button_panel_value)) {
 
@@ -46,30 +46,30 @@ void InputHandler::buttons_calibration() {}
 
 InputHandler::button_press InputHandler::handle_left_release() {
 
-  if (debounce_timer_left > long_press_treshold) {
-    clear_debounces();
+  if (debounce_timer_left > long_press_threshold) {
+    clear_debounce_timers();
     return left_button_long_press;
   }
 
-  clear_debounces();
+  clear_debounce_timers();
   return left_button_press;
 }
 
 InputHandler::button_press InputHandler::handle_middle_release() {
-  if (debounce_timer_middle > long_press_treshold) {
-    clear_debounces();
+  if (debounce_timer_middle > long_press_threshold) {
+    clear_debounce_timers();
     return middle_button_long_press;
   }
-  clear_debounces();
+  clear_debounce_timers();
   return middle_button_press;
 }
 
 InputHandler::button_press InputHandler::handle_right_release() {
-  if (debounce_timer_right > long_press_treshold) {
-    clear_debounces();
+  if (debounce_timer_right > long_press_threshold) {
+    clear_debounce_timers();
     return right_button_long_press;
   }
-  clear_debounces();
+  clear_debounce_timers();
   return right_button_press;
 }
 
@@ -90,7 +90,7 @@ void InputHandler::get_button_panel_value() {
   // Serial.println(button_panel_value);
 }
 
-void InputHandler::clear_debounces() {
+void InputHandler::clear_debounce_timers() {
   debounce_timer_left = 0;
   debounce_timer_middle = 0;
   debounce_timer_right = 0;

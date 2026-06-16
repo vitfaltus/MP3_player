@@ -1,5 +1,4 @@
-
-#define ERROR_MARGIN_ANALOG_READ 45
+#pragma once
 
 class InputHandler {
 
@@ -27,8 +26,8 @@ private:
   const int middle_analog_value = 1200;
   const int right_analog_value = 1050;
 
-  const int long_press_treshold = 600;
-  const int short_press_treshold = 100;
+  const int long_press_threshold = 600;
+  const int short_press_threshold = 100;
 
   int debounce_timer_left = 0;
   int debounce_timer_middle = 0;
@@ -37,7 +36,9 @@ private:
   const int div_cons = 8;
   int button_panel_value = 0;
 
-  static bool around_value(int reference_value, int compared_value);
+  const int analog_read_error_margin = 45;
+
+  [[nodiscard]] bool around_value(int reference_value, int compared_value) const;
 
   void get_button_panel_value();
 
@@ -45,5 +46,5 @@ private:
   button_press handle_middle_release();
   button_press handle_right_release();
 
-  void clear_debounces();
+  void clear_debounce_timers();
 };

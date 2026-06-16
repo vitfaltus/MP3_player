@@ -1,7 +1,6 @@
 #include "audio_settings.hpp"
 #include "AudioOutputI2S.h"
 #include "pin_config.hpp"
-#include <Arduino.h>
 
 AudioSettings::AudioSettings() {
   amp = new AudioOutputI2S();
@@ -11,12 +10,10 @@ AudioSettings::AudioSettings() {
 }
 
 AudioSettings::~AudioSettings() {
-  if (amp) {
     delete amp;
-  }
 }
 
-double AudioSettings::volume_up() {
+float AudioSettings::volume_up() {
   if (m_real_volume_level < 1.0) {
     m_real_volume_level += VOLUME_DIFF;
     amp->SetGain(m_real_volume_level);
@@ -25,13 +22,13 @@ double AudioSettings::volume_up() {
   return m_real_volume_level;
 }
 
-void AudioSettings::set_volume(double level) {
+void AudioSettings::set_volume(float level) {
   m_real_volume_level = level;
   amp->SetGain(m_real_volume_level);
   m_virtual_volume_level = m_real_volume_level;
 }
 
-double AudioSettings::volume_down() {
+float AudioSettings::volume_down() {
   if (m_real_volume_level > 0.02) {
     m_real_volume_level -= VOLUME_DIFF;
     amp->SetGain(m_real_volume_level);
@@ -50,6 +47,6 @@ void AudioSettings::restore_audio() {
   amp->SetGain(m_real_volume_level);
 }
 
-double AudioSettings::get_volume() { return m_real_volume_level; }
+float AudioSettings::get_volume() const { return m_real_volume_level; }
 
-AudioOutputI2S *AudioSettings::get_audio_output() { return amp; }
+AudioOutputI2S *AudioSettings::get_audio_output() const { return amp; }

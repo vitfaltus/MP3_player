@@ -26,9 +26,9 @@ Song::~Song() {
   }
 }
 
-Song *Song::get_next_song() { return m_next_song; }
+Song *Song::get_next_song() const { return m_next_song; }
 
-Song *Song::get_previous_song() { return m_previous_song; }
+Song *Song::get_previous_song() const { return m_previous_song; }
 
 void Song::set_previous_song(Song *song_ptr) { m_previous_song = song_ptr; }
 
@@ -55,7 +55,7 @@ void Song::play(AudioOutputI2S *audio_output) {
   m_mp3->begin(m_file, audio_output);
 }
 
-char *Song::get_song_path() { return m_song_path; }
+char *Song::get_song_path() const { return m_song_path; }
 
 void Song::free_buffer() {
   if (m_file) {

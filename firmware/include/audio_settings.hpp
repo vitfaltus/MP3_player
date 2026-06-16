@@ -1,30 +1,30 @@
-
+#pragma once
 #include "AudioOutputI2S.h"
 
 #pragma once
 
 class AudioSettings {
   AudioOutputI2S *amp;
-  double m_real_volume_level = 0.3;
-  double m_virtual_volume_level;
+  float m_real_volume_level = 0.3;
+  float m_virtual_volume_level;
 
-  const double VOLUME_DIFF = 0.05;
+  const float VOLUME_DIFF = 0.05;
 
 public:
   AudioSettings();
   ~AudioSettings();
 
-  double volume_up();
+  float volume_up();
 
-  void set_volume(double level);
+  void set_volume(float level);
 
-  double volume_down();
+  float volume_down();
 
   void shut_audio();
 
   void restore_audio();
 
-  double get_volume();
+  [[nodiscard]] float get_volume() const;
 
-  AudioOutputI2S *get_audio_output();
+  [[nodiscard]] AudioOutputI2S *get_audio_output() const;
 };

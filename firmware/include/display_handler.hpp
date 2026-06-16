@@ -1,3 +1,4 @@
+#pragma once
 #include <Adafruit_SSD1306.h>
 
 class DisplayHandler {
@@ -8,7 +9,7 @@ class DisplayHandler {
   char *m_song_name = nullptr;
   char *m_artist_name = nullptr;
   void draw_on_boot();
-  char *parse_name(const char *song_path);
+  static char *parse_name(const char *song_path);
 
 public:
   DisplayHandler();
@@ -20,4 +21,5 @@ public:
   void draw_play();
   void dim_screen(bool cond);
   void draw_song_template();
+  void show_song_screen(const char *song_path, float battery_voltage, float volume_level);
 };

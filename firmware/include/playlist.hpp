@@ -1,6 +1,7 @@
+#pragma once
 #include "audio_settings.hpp"
-
 #include "song.hpp"
+
 #include <SD.h>
 
 class Playlist {
@@ -18,13 +19,13 @@ public:
   ~Playlist();
 
   void AddSong(const char *path);
-  void Play(AudioSettings *audio);
+  void Play(const AudioSettings *audio);
   void Stop();
-  bool IsPaused() const;
-  void PlaylistLoop(AudioSettings *audio);
-  void PlayNextSong(AudioSettings *audio);
-  void PlayPreviousSong(AudioSettings *audio);
+  [[nodiscard]] bool IsPaused() const;
+  void PlaylistLoop(const AudioSettings *audio);
+  void PlayNextSong(const AudioSettings *audio);
+  void PlayPreviousSong(const AudioSettings *audio);
   void CreatePlaylist(File &current_dir);
 
-  char *GetSongName() { return m_current_song->get_song_path(); }
+  [[nodiscard]] char *GetSongName() const { return m_current_song->get_song_path(); }
 };

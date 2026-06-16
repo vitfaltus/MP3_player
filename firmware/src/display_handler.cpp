@@ -81,6 +81,18 @@ void DisplayHandler::draw_song_template() {
 
   display.display();
 }
+void DisplayHandler::show_song_screen(const char *song_path,
+                                      float battery_voltage,
+                                      float volume_level) {
+  dim_screen(true);
+  draw_song_template();
+  change_volume_level(volume_level);
+  change_song_name(song_path);
+  change_battery_voltage(battery_voltage);
+  draw_pause();
+  dim_screen(false);
+
+}
 void DisplayHandler::draw_on_boot() {
   display.clearDisplay();
 
@@ -104,8 +116,7 @@ char *DisplayHandler::parse_name(const char *song_path) {
     return nullptr;
   }
 
-  const char *tmp_name = new char[last_slash_idx + 1]();
-  tmp_name = song_path + last_slash_idx + 1;
+  const char *tmp_name = song_path + last_slash_idx + 1;
   char *song_name = strdup(tmp_name);
   return song_name;
 }

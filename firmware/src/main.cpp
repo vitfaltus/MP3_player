@@ -49,15 +49,7 @@ void setup() {
   playlist = new Playlist("/");
 
   Serial.println("Systems set up");
-  display_handler->dim_screen(true);
-  display_handler->draw_song_template();
-  display_handler->change_volume_level(audio_settings->get_volume());
-  display_handler->change_song_name(playlist->GetSongName());
-  display_handler->change_battery_voltage(
-      battery_manager->get_battery_voltage());
-  display_handler->change_battery_voltage(audio_settings->get_volume());
-  display_handler->draw_pause();
-  display_handler->dim_screen(false);
+  display_handler->show_song_screen(playlist->GetSongName(), BatteryManager::get_battery_voltage(), audio_settings->get_volume());
 
   input_handler->buttons_calibration();
   Serial.println("Buttons calibrated");
@@ -105,10 +97,10 @@ void loop() {
     break;
   }
   playlist->PlaylistLoop(audio_settings);
-  unsigned long now_millis = millis();
-  if (now_millis - last_millis > read_interval_millis) {
+  if (unsigned long now_millis = millis();
+      now_millis - last_millis > read_interval_millis) {
     display_handler->change_battery_voltage(
-        battery_manager->get_battery_voltage());
+        BatteryManager::get_battery_voltage());
     last_millis = now_millis;
   }
 }

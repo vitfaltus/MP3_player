@@ -71,7 +71,7 @@ void Playlist::AddSong(const char *path) {
   }
 }
 
-void Playlist::Play(AudioSettings *audio) {
+void Playlist::Play(const AudioSettings *audio) {
   m_paused = false;
   m_current_song->play(audio->get_audio_output());
 }
@@ -83,7 +83,7 @@ void Playlist::Stop() {
 
 bool Playlist::IsPaused() const { return m_paused; }
 
-void Playlist::PlaylistLoop(AudioSettings *audio) {
+void Playlist::PlaylistLoop(const AudioSettings *audio) {
   if (!m_paused) {
     if (!m_current_song->is_playing()) {
       PlayNextSong(audio);
@@ -91,7 +91,7 @@ void Playlist::PlaylistLoop(AudioSettings *audio) {
   }
 }
 
-void Playlist::PlayNextSong(AudioSettings *audio) {
+void Playlist::PlayNextSong(const AudioSettings *audio) {
 
   if (Song *next_song = m_current_song->get_next_song()) {
 
@@ -109,7 +109,7 @@ void Playlist::PlayNextSong(AudioSettings *audio) {
   }
 }
 
-void Playlist::PlayPreviousSong(AudioSettings *audio) {
+void Playlist::PlayPreviousSong(const AudioSettings *audio) {
 
   if (Song *previous_song = m_current_song->get_previous_song()) {
 

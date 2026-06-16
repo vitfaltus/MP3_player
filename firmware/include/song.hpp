@@ -1,4 +1,4 @@
-#include "AudioFileSourceSD.h"
+#pragma once
 #include "AudioGeneratorMP3.h"
 
 #include "AudioOutputI2S.h"
@@ -17,8 +17,8 @@ public:
 
   ~Song();
 
-  Song *get_next_song();
-  Song *get_previous_song();
+  [[nodiscard]] Song *get_next_song() const;
+  [[nodiscard]] Song *get_previous_song() const;
 
   void set_previous_song(Song *song_ptr);
   void set_next_song(Song *song_ptr);
@@ -28,7 +28,7 @@ public:
   void stop();
   void play(AudioOutputI2S *audio_output);
 
-  char *get_song_path();
+  [[nodiscard]] char *get_song_path() const;
 
   void free_buffer();
 };
