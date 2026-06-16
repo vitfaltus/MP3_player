@@ -1,7 +1,3 @@
-//
-// Created by archer on 09.06.26.
-//
-
 #include "../include/display_handler.hpp"
 #include <Adafruit_GFX.h>
 #include <Wire.h>
@@ -15,6 +11,8 @@ DisplayHandler::DisplayHandler() {
   }
   delay(15);
   draw_on_boot();
+  display.setTextSize(1);
+  display.clearDisplay();
 }
 DisplayHandler::~DisplayHandler() {
   if (m_song_name) {
@@ -23,40 +21,67 @@ DisplayHandler::~DisplayHandler() {
 }
 void DisplayHandler::change_song_name(const char *song_path) {
   m_song_name = parse_name(song_path);
-  update_screen(m_song_name, m_battery_voltage, m_volume_level);
+
+  display.setTextWrap(true);
+  display.fillRect(0, 26, 128, 38, 0x0000);
+  display.setCursor(19, 35);
+  display.println(m_song_name);
+  display.display();
 }
 void DisplayHandler::change_battery_voltage(float battery_voltage) {
   m_battery_voltage = battery_voltage;
-  update_screen(m_song_name, battery_voltage, m_volume_level);
+
+  display.setTextWrap(false);
+
+  display.fillRect(109, 0, 128, 12, 0x0000);
+  display.setCursor(111, 3);
+  display.println(battery_voltage);
+  display.display();
 }
 void DisplayHandler::change_volume_level(float volume_level) {
   m_volume_level = volume_level;
-  update_screen(m_song_name, m_battery_voltage, m_volume_level);
+
+  display.setTextWrap(false);
+
+  display.fillRect(24, 1, 30, 12, 0x0000);
+  display.setCursor(25, 3);
+  display.println(volume_level);
+  display.display();
+}
+void DisplayHandler::draw_pause() {
+  display.setTextWrap(false);
+
+  display.fillRect(55, 2, 30, 10, 0x0000);
+  display.setCursor(55,2);
+  display.println("Psd");
+  display.display();
+
+}
+void DisplayHandler::draw_play() {
+  display.setTextWrap(false);
+  display.fillRect(55, 2, 30, 10, 0x0000);
+  display.setCursor(55,2);
+  display.println("Ply");
+  display.display();
+
+}
+void DisplayHandler::dim_screen(const bool cond) {
+  display.dim(cond);
 }
 
-void DisplayHandler::update_screen(const char * song_name, float battery_voltage, float volume_level) {
+void DisplayHandler::draw_song_template() {
   display.clearDisplay();
   display.setTextSize(1);
 
-    // string 1
     display.setTextWrap(false);
     display.setCursor(87, 3);
     display.println("Bat:");
-    // string 2
-    display.setCursor(111, 3);
-    display.println(battery_voltage);
-    // string 4
+
     display.setCursor(5, 17);
     display.println("Now playing:");
-    // string 5
-    display.setCursor(19, 35);
-    display.setTextWrap(true);
-    display.println(song_name);
 
     display.setCursor(2, 3);
     display.println("Vol");
-    display.setCursor(25, 3);
-    display.println(volume_level);
 
   display.display();
 

@@ -48,14 +48,20 @@ void setup() {
   audio_settings = new AudioSettings();
 
 
+
+
   Serial.println("Creating playlist");
   playlist = new Playlist("/");
 
   Serial.println("Systems set up");
-
+  display_handler->dim_screen(true);
+  display_handler->draw_song_template();
+  display_handler->change_volume_level(audio_settings->get_volume());
   display_handler->change_song_name(playlist->GetSongName());
   display_handler->change_battery_voltage(battery_manager->get_battery_voltage());
   display_handler->change_battery_voltage(audio_settings->get_volume());
+  display_handler->draw_pause();
+  display_handler->dim_screen(false);
 
   input_handler->buttons_calibration();
   Serial.println("Buttons calibrated");
@@ -86,11 +92,12 @@ void loop() {
       if (playlist->IsPaused()){
         playlist->Play(audio_settings);
         audio_settings->restore_audio();
-        Serial.println("audio restored");
+        display_handler->draw_play();
       }
       else{
         playlist->Stop();
         audio_settings->shut_audio();
+        display_handler->draw_pause();
       }
       break;
     case InputHandler::right_button_press: // volume up

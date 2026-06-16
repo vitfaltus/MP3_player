@@ -1,7 +1,3 @@
-//
-// Created by archer on 09.06.26.
-//
-
 #include <Adafruit_SSD1306.h>
 
 
@@ -22,7 +18,10 @@ class DisplayHandler {
   void change_song_name(const char *song_path);
   void change_battery_voltage(float battery_voltage);
   void change_volume_level(float volume_level);
-  void update_screen(const char * song_name, float battery_voltage, float volume_level);
+  void draw_pause();
+  void draw_play();
+  void dim_screen(bool cond);
+  void draw_song_template();
 
 };
 
