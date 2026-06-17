@@ -17,5 +17,17 @@ USB-C, jack, sd card reader
 ## Software
 The firmware is written in C++ 23 and I'm using platformio as my development platform with arduino framework. 
 
+### SD card structure
+The SD card should be structured as follows:
+/
+├── songs/
+│   ├── all/
+│   │   ├── Interpret1-SongName1.mp3
+│   │   ├── Interpret1-SongName2.mp3
+│	│	└── Interpret2-SongName1.mp3
+├── system/
+|	├── playlist.json
+│   └── settings.json
+
 
 
