@@ -1,6 +1,7 @@
 #include "audio_settings.hpp"
 #include "battery_manager.hpp"
 #include "display_handler.hpp"
+#include "file_system_manager.hpp"
 #include "input_handler.hpp"
 #include "pin_config.hpp"
 #include "playlist.hpp"
@@ -11,18 +12,8 @@ AudioSettings *audio_settings;
 Playlist *playlist;
 DisplayHandler *display_handler;
 BatteryManager *battery_manager;
+FileSystemManager *filesys_manager;
 
-bool filesys_setup() {
-  SPI.begin(PinConfig::SD_SCK, PinConfig::SD_MISO, PinConfig::SD_MOSI);
-  for (int i = 0; i < 5; i++) {
-    if (!SD.begin(PinConfig::SD_CS)) {
-      delay(1000);
-    } else {
-      return true; // SD card mounted
-    }
-  }
-  return false; // SD card not mounted
-}
 
 void setup() {
   Serial.begin(9600);
@@ -34,10 +25,10 @@ void setup() {
   battery_manager = new BatteryManager();
 
   Serial.println("Setting up filesystem");
-  if (filesys_setup()) {
-    Serial.println("Filesystem set up");
-  } else {
-    Serial.println("Filesystem failed to set up");
+  filesys_manager = new FileSystemManager();
+  if (!filesys_manager->correct_sdcard_structure()) {
+    display_handler->display_simple_text("Incorrect sd card structure");
+    while (1){continue;}
   }
 
   Serial.println("Creating components");

@@ -22,4 +22,5 @@ public:
   void dim_screen(bool cond);
   void draw_song_template();
   void show_song_screen(const char *song_path, float battery_voltage, float volume_level);
+  void display_simple_text(const char *text);
 };

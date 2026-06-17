@@ -93,6 +93,13 @@ void DisplayHandler::show_song_screen(const char *song_path,
   dim_screen(false);
 
 }
+void DisplayHandler::display_simple_text(const char *text) {
+  display.setCursor(0, 10);
+  display.setTextWrap(true);
+  display.println(text);
+  display.display();
+}
+
 void DisplayHandler::draw_on_boot() {
   display.clearDisplay();
 
