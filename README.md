@@ -26,8 +26,8 @@ The SD card should be structured as follows:
 │   │   ├── Interpret1-SongName2.mp3
 │	│	└── Interpret2-SongName1.mp3
 ├── system/
-|	├── playlist.json
-│   └── settings.json
+|	├── playlist.txt
+│   └── settings.txt
 
 
 
