@@ -31,7 +31,12 @@ void FileSystemManager::create_playlist_file() {
 
   f.close();
 }
+void FileSystemManager::create_song_file() {
+  File f = SD.open("/system/song.txt", FILE_WRITE);
+  f.println(CURRENT_PLAYING_STRING);
 
+  f.close();
+}
 
 FileSystemManager::FileSystemManager() {
     SPI.begin(PinConfig::SD_SCK, PinConfig::SD_MISO, PinConfig::SD_MOSI);
@@ -54,11 +59,14 @@ bool FileSystemManager::correct_sdcard_structure() {
   else if (!SD.exists("/system/playlist.txt")) {
     create_playlist_file();
   }
+  else if (!SD.exists("/system/song,txt")) {
+    create_song_file();
+  }
   return true;
 }
 
 float FileSystemManager::load_saved_settings() {
-  File f = SD.open("/system/settings.txt", FILE_WRITE);
+  File f = SD.open("/system/playlist.txt", FILE_WRITE);
   // read the header
   for (int i = 0; i < strlen(VOLUME_STRING); i++) {
     f.read();
@@ -73,8 +81,7 @@ float FileSystemManager::load_saved_settings() {
   return strtof(reinterpret_cast<const char *>(buff), nullptr);
 }
 
-void FileSystemManager::load_saved_playlist(char *playlist_root,
-char *current_song) {
+char* FileSystemManager::load_saved_playlist() {
   File f = SD.open("/system/playlist.txt", FILE_WRITE);
   // read the header first line
   for (int i = 0; i < strlen(PLAYLIST_ROOT_STRING); i++) {
@@ -83,7 +90,7 @@ char *current_song) {
 
   //first line
   int buff_size1 = 127;
-  playlist_root = new char[buff_size1];
+  auto playlist_root = new char[buff_size1];
   int cnt1 = 1;
   int read1 = f.read();
   playlist_root[0] = read1;
@@ -101,7 +108,14 @@ char *current_song) {
   }
   playlist_root[cnt1] = '\n';
 
+  f.close();
 
+  return playlist_root;
+
+}
+
+char *FileSystemManager::load_saved_song() {
+  File f = SD.open("/system/song.txt", FILE_WRITE);
   // TODO check for null -> current_song = nullptr
   // read the header second line
   for (int i = 0; i < strlen(CURRENT_PLAYING_STRING); i++) {
@@ -110,7 +124,7 @@ char *current_song) {
 
   //second line
   int buff_size2 = 127;
-  current_song = new char[buff_size2];
+  auto current_song = new char[buff_size2];
   int cnt2 = 1;
   int read2 = f.read();
   current_song[0] = read2;
@@ -129,6 +143,8 @@ char *current_song) {
   current_song[cnt2] = '\n';
 
   f.close();
+
+  return current_song;
 }
 
 void FileSystemManager::write_current_song(const char *current_song) {
