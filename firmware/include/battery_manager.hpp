@@ -2,12 +2,13 @@
 #define FIRMWARE_INCLUDE_BATTERY_MANAGER_HPP
 
 
-class BatteryManager {
-  const float min_battery_threshold = 3.4;
+class BatteryManager
+{
+    const float MinBatteryThreshold = 3.4;
 
 public:
-  BatteryManager();
-  static float get_battery_voltage();
+    BatteryManager();
+    static float getBatteryVoltage();
 };
 
 #endif
