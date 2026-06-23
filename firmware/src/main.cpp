@@ -62,7 +62,6 @@ void setup()
                                       BatteryManager::getBatteryVoltage(),
                                       audio_settings->getVolume());
 
-    input_handler->buttons_calibration();
     Serial.println("Buttons calibrated");
 }
 
@@ -73,7 +72,7 @@ void loop()
 
     InputHandler::ButtonPress button_input = input_handler->checkButtons();
 
-    if (button_input != InputHandler::ButtonPress::none)
+    if (button_input != InputHandler::ButtonPress::None)
     {
 
         Serial.println(button_input);
