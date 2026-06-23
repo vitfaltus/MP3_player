@@ -6,7 +6,7 @@ char* Playlist::addDirSlash(const char* s)
 {
     const size_t len = strlen(s);
 
-    char* out = static_cast<char*>(malloc(len + 2));
+    const auto out = static_cast<char*>(malloc(len + 2));
     if (!out)
     {
         Serial.println("Path name not allocated");
@@ -56,7 +56,7 @@ Playlist::~Playlist()
 
 void Playlist::addSong(const char* path)
 {
-    char* slash_name = addDirSlash(path);
+    const char* slash_name = addDirSlash(path);
     if (!slash_name)
     {
         return;
@@ -164,11 +164,7 @@ void Playlist::createPlaylist(File& current_dir)
         {
             break;
         }
-        if (entry.isDirectory())
-        {
-            continue;
-        }
-        else
+        if (!entry.isDirectory())
         {
             this->addSong(entry.name());
         }

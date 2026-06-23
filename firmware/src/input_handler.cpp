@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include "pin_config.hpp"
 
-bool InputHandler::aroundValue(int reference_value, int compared_value) const
+bool InputHandler::aroundValue(const int reference_value,const int compared_value) const
 {
     if (std::abs(reference_value - compared_value) < AnalogReadErrorMargin)
     {

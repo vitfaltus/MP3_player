@@ -42,7 +42,7 @@ bool mountSDCard()
 }
 
 
-void songPlayingState(InputHandler::ButtonPress ButtonInput)
+void songPlayingState(const InputHandler::ButtonPress ButtonInput)
 {
     switch (ButtonInput)
     {
@@ -82,7 +82,7 @@ void songPlayingState(InputHandler::ButtonPress ButtonInput)
     playlist->playlistLoop(audio_settings);
 }
 
-void settingsState(InputHandler::ButtonPress ButtonInput)
+void settingsState(const InputHandler::ButtonPress ButtonInput)
 {
     switch (ButtonInput)
     {
@@ -108,7 +108,7 @@ void settingsState(InputHandler::ButtonPress ButtonInput)
 
 void batteryRoutine()
 {
-    if (unsigned long now_millis = millis();
+    if (const unsigned long now_millis = millis();
         now_millis - last_millis > read_interval_millis)
     {
         display_handler->changeBatteryVoltage(
@@ -156,7 +156,7 @@ void setup()
 
 void loop()
 {
-    InputHandler::ButtonPress ButtonInput = input_handler->checkButtons();
+    const InputHandler::ButtonPress ButtonInput = input_handler->checkButtons();
 
     switch (State)
     {

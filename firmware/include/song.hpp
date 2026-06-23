@@ -16,7 +16,7 @@ class Song
     Song* NextSong;
 
 public:
-    Song(const char* song_path);
+    explicit Song(const char* song_path);
 
     ~Song();
 

@@ -18,7 +18,7 @@ class Playlist
     void createSequentialPlaylist(const char* path);
 
 public:
-    Playlist(const char* path);
+    explicit Playlist(const char* path);
     ~Playlist();
 
     void addSong(const char* path);

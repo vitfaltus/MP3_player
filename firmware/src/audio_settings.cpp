@@ -24,7 +24,7 @@ float AudioSettings::volumeUp()
     return realVolumeLevel;
 }
 
-void AudioSettings::setVolume(float level)
+void AudioSettings::setVolume(const float level)
 {
     realVolumeLevel = level;
     Amp->SetGain(realVolumeLevel);

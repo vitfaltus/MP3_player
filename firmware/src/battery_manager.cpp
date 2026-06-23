@@ -15,6 +15,6 @@ float BatteryManager::getBatteryVoltage()
             analogReadMilliVolts(
                     PinConfig::BATTERY_READ); // ADC with correction
     }
-    float Vbattf = 2 * Vbatt / 16 / 1000.0; // attenuation ratio 1/2, mV --> V
+    const float Vbattf = 2 * Vbatt / 16 / 1000.0; // attenuation ratio 1/2, mV --> V
     return Vbattf;
 }

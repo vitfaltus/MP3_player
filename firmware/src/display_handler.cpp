@@ -18,10 +18,7 @@ DisplayHandler::DisplayHandler()
 }
 DisplayHandler::~DisplayHandler()
 {
-    if (SongName)
-    {
         delete SongName;
-    }
 }
 void DisplayHandler::changeSongName(const char* song_path)
 {
@@ -33,7 +30,7 @@ void DisplayHandler::changeSongName(const char* song_path)
     Display.println(SongName);
     Display.display();
 }
-void DisplayHandler::changeBatteryVoltage(float battery_voltage)
+void DisplayHandler::changeBatteryVoltage(const float battery_voltage)
 {
     BatteryVoltage = battery_voltage;
 
@@ -44,7 +41,7 @@ void DisplayHandler::changeBatteryVoltage(float battery_voltage)
     Display.println(battery_voltage);
     Display.display();
 }
-void DisplayHandler::changeVolumeLevel(float volume_level)
+void DisplayHandler::changeVolumeLevel(const float volume_level)
 {
     VolumeLevel = volume_level;
 
@@ -92,7 +89,7 @@ void DisplayHandler::drawSongTemplate()
     Display.display();
 }
 void DisplayHandler::showSongScreen(const char* song_path,
-                                      float battery_voltage, float volume_level)
+                                      const float battery_voltage, const float volume_level)
 {
     dimScreen(true);
     drawSongTemplate();
