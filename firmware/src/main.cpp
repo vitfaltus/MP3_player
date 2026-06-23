@@ -6,13 +6,25 @@
 #include "pin_config.hpp"
 #include "playlist.hpp"
 
+
+enum DeviceState
+{
+    SongPlaying,
+    Settings
+};
+
 InputHandler* input_handler;
 AudioSettings* audio_settings;
 Playlist* playlist;
 DisplayHandler* display_handler;
 BatteryManager* battery_manager;
 
-bool filesys_setup()
+DeviceState State;
+
+unsigned long last_millis = 0;
+int read_interval_millis = 5000;
+
+bool mountSDCard()
 {
     SPI.begin(PinConfig::SD_SCK, PinConfig::SD_MISO, PinConfig::SD_MOSI);
     for (int i = 0; i < 5; i++)
@@ -29,55 +41,10 @@ bool filesys_setup()
     return false; // SD card not mounted
 }
 
-void setup()
+
+void songPlayingState(InputHandler::ButtonPress ButtonInput)
 {
-    Serial.begin(9600);
-
-    Serial.println("Display setup");
-    display_handler = new DisplayHandler();
-    Serial.println("Display set up");
-
-    battery_manager = new BatteryManager();
-
-    Serial.println("Setting up filesystem");
-    if (filesys_setup())
-    {
-        Serial.println("Filesystem set up");
-    }
-    else
-    {
-        Serial.println("Filesystem failed to set up");
-    }
-
-    Serial.println("Creating components");
-
-    input_handler = new InputHandler();
-    audio_settings = new AudioSettings();
-
-    Serial.println("Creating playlist");
-    playlist = new Playlist("/");
-
-    Serial.println("Systems set up");
-    display_handler->showSongScreen(playlist->getSongName(),
-                                      BatteryManager::getBatteryVoltage(),
-                                      audio_settings->getVolume());
-
-    Serial.println("Buttons calibrated");
-}
-
-unsigned long last_millis = 0;
-int read_interval_millis = 5000;
-void loop()
-{
-
-    InputHandler::ButtonPress button_input = input_handler->checkButtons();
-
-    if (button_input != InputHandler::ButtonPress::None)
-    {
-
-        Serial.println(button_input);
-    }
-    switch (button_input)
+    switch (ButtonInput)
     {
     case InputHandler::LeftButtonPress: // volume down
         audio_settings->volumeDown();
@@ -113,6 +80,34 @@ void loop()
         break;
     }
     playlist->playlistLoop(audio_settings);
+}
+
+void settingsState(InputHandler::ButtonPress ButtonInput)
+{
+    switch (ButtonInput)
+    {
+    case InputHandler::LeftButtonPress:
+
+        break;
+    case InputHandler::LeftButtonLongPress:
+
+        break;
+    case InputHandler::MiddleButtonPress:
+
+        break;
+    case InputHandler::RightButtonPress:
+
+        break;
+    case InputHandler::RightButtonLongPress:
+
+        break;
+    default:
+        break;
+    }
+}
+
+void batteryRoutine()
+{
     if (unsigned long now_millis = millis();
         now_millis - last_millis > read_interval_millis)
     {
@@ -121,3 +116,58 @@ void loop()
         last_millis = now_millis;
     }
 }
+
+void setup()
+{
+    Serial.begin(9600);
+
+    display_handler = new DisplayHandler();
+    Serial.println("Display setup");
+
+    battery_manager = new BatteryManager();
+    Serial.println("Battery manager setup");
+
+    if (mountSDCard())
+    {
+        Serial.println("Filesystem set up");
+    }
+    else
+    {
+        Serial.println("Filesystem failed to set up");
+    }
+
+    State = SongPlaying;
+    
+    input_handler = new InputHandler();
+    Serial.println("Input handler setup");
+
+    audio_settings = new AudioSettings();
+    Serial.println("Audio settings setup");
+
+    playlist = new Playlist("/");
+    Serial.println("Playlist created");
+
+    display_handler->showSongScreen(playlist->getSongName(),
+                                      BatteryManager::getBatteryVoltage(),
+                                      audio_settings->getVolume());
+    
+}
+
+
+void loop()
+{
+    InputHandler::ButtonPress ButtonInput = input_handler->checkButtons();
+
+    switch (State)
+    {
+        case SongPlaying:
+            songPlayingState(ButtonInput);
+        break;
+        case Settings:
+            settingsState(ButtonInput);
+        break;
+    }
+    
+    batteryRoutine();
+}
+
