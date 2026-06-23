@@ -1,4 +1,6 @@
-#pragma once
+#ifndef FIRMWARE_INCLUDE_PLAYLIST_HPP
+#define FIRMWARE_INCLUDE_PLAYLIST_HPP
+
 #include "audio_settings.hpp"
 #include "song.hpp"
 
@@ -27,5 +29,10 @@ public:
   void PlayPreviousSong(const AudioSettings *audio);
   void CreatePlaylist(File &current_dir);
 
-  [[nodiscard]] char *GetSongName() const { return m_current_song->get_song_path(); }
+  [[nodiscard]] char *GetSongName() const {
+    return m_current_song->get_song_path();
+  }
 };
+
+
+#endif

@@ -1,7 +1,8 @@
-#pragma once
+#ifndef FIRMWARE_INCLUDE_AUDIO_SETTINGS_HPP
+#define FIRMWARE_INCLUDE_AUDIO_SETTINGS_HPP
+
 #include "AudioOutputI2S.h"
 
-#pragma once
 
 class AudioSettings {
   AudioOutputI2S *amp;
@@ -28,3 +29,5 @@ public:
 
   [[nodiscard]] AudioOutputI2S *get_audio_output() const;
 };
+
+#endif

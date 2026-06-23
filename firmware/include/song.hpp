@@ -1,4 +1,6 @@
-#pragma once
+#ifndef FIRMWARE_INCLUDE_SONG_HPP
+#define FIRMWARE_INCLUDE_SONG_HPP
+
 #include "AudioGeneratorMP3.h"
 
 #include "AudioOutputI2S.h"
@@ -32,3 +34,5 @@ public:
 
   void free_buffer();
 };
+
+#endif

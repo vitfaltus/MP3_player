@@ -1,4 +1,7 @@
-#pragma once
+#ifndef FIRMWARE_INCLUDE_DISPLAY_HANDLER_HPP
+#define FIRMWARE_INCLUDE_DISPLAY_HANDLER_HPP
+
+
 #include <Adafruit_SSD1306.h>
 
 class DisplayHandler {
@@ -21,5 +24,8 @@ public:
   void draw_play();
   void dim_screen(bool cond);
   void draw_song_template();
-  void show_song_screen(const char *song_path, float battery_voltage, float volume_level);
+  void show_song_screen(const char *song_path, float battery_voltage,
+                        float volume_level);
 };
+
+#endif

@@ -91,7 +91,6 @@ void DisplayHandler::show_song_screen(const char *song_path,
   change_battery_voltage(battery_voltage);
   draw_pause();
   dim_screen(false);
-
 }
 void DisplayHandler::draw_on_boot() {
   display.clearDisplay();

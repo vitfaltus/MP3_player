@@ -9,9 +9,7 @@ AudioSettings::AudioSettings() {
   m_virtual_volume_level = m_real_volume_level;
 }
 
-AudioSettings::~AudioSettings() {
-    delete amp;
-}
+AudioSettings::~AudioSettings() { delete amp; }
 
 float AudioSettings::volume_up() {
   if (m_real_volume_level < 1.0) {

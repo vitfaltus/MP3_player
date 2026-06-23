@@ -1,4 +1,5 @@
-#pragma once
+#ifndef FIRMWARE_INCLUDE_INPUT_HANDLER_HPP
+#define FIRMWARE_INCLUDE_INPUT_HANDLER_HPP
 
 class InputHandler {
 
@@ -38,7 +39,8 @@ private:
 
   const int analog_read_error_margin = 45;
 
-  [[nodiscard]] bool around_value(int reference_value, int compared_value) const;
+  [[nodiscard]] bool around_value(int reference_value,
+                                  int compared_value) const;
 
   void get_button_panel_value();
 
@@ -48,3 +50,5 @@ private:
 
   void clear_debounce_timers();
 };
+
+#endif

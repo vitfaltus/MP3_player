@@ -1,4 +1,7 @@
-#pragma once
+#ifndef FIRMWARE_INCLUDE_PIN_CONFIG_HPP
+#define FIRMWARE_INCLUDE_PIN_CONFIG_HPP
+
+
 #include <Arduino.h>
 
 namespace PinConfig {
@@ -16,3 +19,5 @@ constexpr int BATTERY_READ = D0;
 
 constexpr int BUTTON_PANEL = D1;
 } // namespace PinConfig
+
+#endif

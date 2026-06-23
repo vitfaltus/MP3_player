@@ -49,7 +49,9 @@ void setup() {
   playlist = new Playlist("/");
 
   Serial.println("Systems set up");
-  display_handler->show_song_screen(playlist->GetSongName(), BatteryManager::get_battery_voltage(), audio_settings->get_volume());
+  display_handler->show_song_screen(playlist->GetSongName(),
+                                    BatteryManager::get_battery_voltage(),
+                                    audio_settings->get_volume());
 
   input_handler->buttons_calibration();
   Serial.println("Buttons calibrated");
