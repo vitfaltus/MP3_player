@@ -104,9 +104,9 @@ void DisplayHandler::drawOnBoot()
     Display.clearDisplay();
 
     Display.setTextSize(3);
-    Display.setCursor(40, 20);
+    Display.setCursor(2, 30);
     Display.setTextColor(WHITE);
-    Display.println(":3");
+    Display.println("\\(^_^)/");
     Display.display();
 }
 char* DisplayHandler::parseName(const char* song_path)
@@ -130,4 +130,29 @@ char* DisplayHandler::parseName(const char* song_path)
     const char* tmp_name = song_path + last_slash_idx + 1;
     char* song_name = strdup(tmp_name);
     return song_name;
+}
+
+
+bool DisplayHandler::displayDimmingRoutine(
+    const InputHandler::ButtonPress ButtonInput)
+{
+    const unsigned long now_millis = millis();
+
+    if (ButtonInput != InputHandler::None && ScreenDimmed)
+    {
+        LastMillis = now_millis;
+        dimScreen(false);
+        ScreenDimmed = false;
+        return true;
+    }
+    if (
+        now_millis - LastMillis > ReadIntervalMillis)
+    {
+        dimScreen(true);
+        ScreenDimmed = true;
+        LastMillis = now_millis;
+    }
+    return false;
+
+
 }

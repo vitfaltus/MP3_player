@@ -21,8 +21,10 @@ BatteryManager* battery_manager;
 
 DeviceState State;
 
-unsigned long last_millis = 0;
-int read_interval_millis = 5000;
+unsigned long last_millis_battery = 0;
+int read_interval_millis_battery = 5000;
+
+
 
 bool mountSDCard()
 {
@@ -49,6 +51,11 @@ void changeState()
 
 void songPlayingState(const InputHandler::ButtonPress ButtonInput)
 {
+    if (display_handler->displayDimmingRoutine(ButtonInput))
+    {
+        return;
+    }
+
     switch (ButtonInput)
     {
     case InputHandler::LeftButtonPress: // volume down
@@ -123,13 +130,15 @@ void settingsState(const InputHandler::ButtonPress ButtonInput)
 void batteryRoutine()
 {
     if (const unsigned long now_millis = millis();
-        now_millis - last_millis > read_interval_millis)
+        now_millis - last_millis_battery > read_interval_millis_battery)
     {
         display_handler->changeBatteryVoltage(
             BatteryManager::getBatteryVoltage());
-        last_millis = now_millis;
+        last_millis_battery = now_millis;
     }
 }
+
+
 
 
 
