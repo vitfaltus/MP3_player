@@ -99,6 +99,15 @@ void DisplayHandler::showSongScreen(const char* song_path,
     drawPause();
     dimScreen(false);
 }
+int DisplayHandler::getScreenTimeoutSeconds() const
+{
+    return ReadIntervalMillis/1000;
+}
+void DisplayHandler::setScreenTimeoutSeconds(const int seconds)
+{
+    ReadIntervalMillis = seconds*1000;
+}
+
 void DisplayHandler::drawOnBoot()
 {
     Display.clearDisplay();

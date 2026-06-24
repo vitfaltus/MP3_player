@@ -27,6 +27,7 @@ class DisplayHandler
 public:
     DisplayHandler();
     ~DisplayHandler();
+
     void changeSongName(const char* song_path);
     void changeBatteryVoltage(float battery_voltage);
     void changeVolumeLevel(float volume_level);
@@ -38,6 +39,10 @@ public:
     void drawSongTemplate();
     void showSongScreen(const char* song_path, float battery_voltage,
                           float volume_level);
+
+
+    int getScreenTimeoutSeconds() const;
+    void setScreenTimeoutSeconds(int seconds);
 };
 
 #endif
