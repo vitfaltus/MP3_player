@@ -17,7 +17,7 @@ class DisplayHandler
 
 
     unsigned long LastMillis= 0;
-    int ReadIntervalMillis = 5000;
+    int ReadIntervalMillis = 20000;
     bool ScreenDimmed = false;
 
     void drawOnBoot();
