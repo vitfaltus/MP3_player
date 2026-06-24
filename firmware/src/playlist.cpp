@@ -18,6 +18,36 @@ char* Playlist::addDirSlash(const char* s)
 
     return out;
 }
+bool Playlist::isMP3File(const char* s)
+{
+    constexpr char MP3Extension[] = ".mp3";
+
+    if (strlen(s) <= strlen(MP3Extension))
+    {
+        return false;
+    }
+
+    // move the pointer to the end of the string
+    const char* current_char = s;
+    while (*current_char != '\n')
+    {
+        current_char++;
+    }
+
+
+
+    for (int i = strlen(MP3Extension)-1; i >= 0 ; i--)
+    {
+        if (MP3Extension[i] == *current_char)
+        {
+            return false;
+        }
+        current_char--;
+    }
+    return true;
+
+
+}
 
 void Playlist::createSequentialPlaylist(const char* path)
 {
@@ -166,7 +196,7 @@ void Playlist::createPlaylist(File& current_dir)
         {
             break;
         }
-        if (!entry.isDirectory())
+        if (!entry.isDirectory() && isMP3File(entry.name()))
         {
             this->addSong(entry.name());
         }

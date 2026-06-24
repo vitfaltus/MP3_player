@@ -15,6 +15,8 @@ class Playlist
     bool Paused;
 
     static char* addDirSlash(const char* s);
+    static bool isMP3File(const char* s);
+
     void createSequentialPlaylist(const char* path);
 
 public:
