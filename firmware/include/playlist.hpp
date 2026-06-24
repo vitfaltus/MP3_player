@@ -25,7 +25,7 @@ public:
     void play(const AudioSettings* audio);
     void stop();
     [[nodiscard]] bool isPaused() const;
-    void playlistLoop(const AudioSettings* audio);
+    bool playlistLoop(const AudioSettings* audio);
     void playNextSong(const AudioSettings* audio);
     void playPreviousSong(const AudioSettings* audio);
     void createPlaylist(File& current_dir);

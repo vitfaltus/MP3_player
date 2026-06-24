@@ -79,7 +79,10 @@ void songPlayingState(const InputHandler::ButtonPress ButtonInput)
     default:
         break;
     }
-    playlist->playlistLoop(audio_settings);
+    if (playlist->playlistLoop(audio_settings))
+    {
+        display_handler->changeSongName(playlist->getSongName());
+    }
 }
 
 void settingsState(const InputHandler::ButtonPress ButtonInput)

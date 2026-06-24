@@ -98,15 +98,17 @@ void Playlist::stop()
 
 bool Playlist::isPaused() const { return Paused; }
 
-void Playlist::playlistLoop(const AudioSettings* audio)
+bool Playlist::playlistLoop(const AudioSettings* audio)
 {
     if (!Paused)
     {
         if (!CurrentSong->isPlaying())
         {
             playNextSong(audio);
+            return true;
         }
     }
+    return false;
 }
 
 void Playlist::playNextSong(const AudioSettings* audio)
