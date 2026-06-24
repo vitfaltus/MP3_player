@@ -41,6 +41,11 @@ bool mountSDCard()
     return false; // SD card not mounted
 }
 
+void changeState()
+{
+    State = static_cast<DeviceState>((State + 1) % 2);
+}
+
 
 void songPlayingState(const InputHandler::ButtonPress ButtonInput)
 {
@@ -67,6 +72,9 @@ void songPlayingState(const InputHandler::ButtonPress ButtonInput)
             audio_settings->shutAudio();
             display_handler->drawPause();
         }
+        break;
+    case InputHandler::MiddleButtonLongPress:
+        changeState();
         break;
     case InputHandler::RightButtonPress: // volume up
         audio_settings->volumeUp();
@@ -98,6 +106,9 @@ void settingsState(const InputHandler::ButtonPress ButtonInput)
     case InputHandler::MiddleButtonPress:
 
         break;
+    case InputHandler::MiddleButtonLongPress:
+        changeState();
+        break;
     case InputHandler::RightButtonPress:
 
         break;
@@ -119,6 +130,8 @@ void batteryRoutine()
         last_millis = now_millis;
     }
 }
+
+
 
 void setup()
 {
