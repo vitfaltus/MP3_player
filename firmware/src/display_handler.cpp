@@ -147,12 +147,16 @@ bool DisplayHandler::displayDimmingRoutine(
 {
     const unsigned long now_millis = millis();
 
-    if (ButtonInput != InputHandler::None && ScreenDimmed)
+    if (ButtonInput != InputHandler::None)
     {
         LastMillis = now_millis;
-        dimScreen(false);
-        ScreenDimmed = false;
-        return true;
+        if ( ScreenDimmed)
+        {
+            dimScreen(false);
+            ScreenDimmed = false;
+            return true;
+        }
+
     }
     if (
         now_millis - LastMillis > ReadIntervalMillis)
