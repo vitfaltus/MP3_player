@@ -1,25 +1,48 @@
-#pragma once
+#ifndef FIRMWARE_INCLUDE_DISPLAY_HANDLER_HPP
+#define FIRMWARE_INCLUDE_DISPLAY_HANDLER_HPP
+
+
 #include <Adafruit_SSD1306.h>
 
-class DisplayHandler {
-  Adafruit_SSD1306 display;
-  int m_width = 128, m_height = 64;
-  float m_battery_voltage = 0;
-  float m_volume_level = 0;
-  char *m_song_name = nullptr;
-  char *m_artist_name = nullptr;
-  void draw_on_boot();
-  static char *parse_name(const char *song_path);
+#include "input_handler.hpp"
+
+class DisplayHandler
+{
+    Adafruit_SSD1306 Display;
+
+    int Width = 128, Height = 64;
+    float BatteryVoltage = 0;
+    float VolumeLevel = 0;
+    char* SongName = nullptr;
+
+
+    unsigned long LastMillis= 0;
+    int ReadIntervalMillis = 20000;
+    bool ScreenDimmed = false;
+
+    void drawOnBoot();
+    static char* parseName(const char* song_path);
+    void dimScreen(bool cond);
 
 public:
-  DisplayHandler();
-  ~DisplayHandler();
-  void change_song_name(const char *song_path);
-  void change_battery_voltage(float battery_voltage);
-  void change_volume_level(float volume_level);
-  void draw_pause();
-  void draw_play();
-  void dim_screen(bool cond);
-  void draw_song_template();
-  void show_song_screen(const char *song_path, float battery_voltage, float volume_level);
+    DisplayHandler();
+    ~DisplayHandler();
+
+    void changeSongName(const char* song_path);
+    void changeBatteryVoltage(float battery_voltage);
+    void changeVolumeLevel(float volume_level);
+    void drawPause();
+    void drawPlay();
+    // This method returns true, if the display was turned on by the input.
+    bool displayDimmingRoutine(InputHandler::ButtonPress ButtonInput);
+    // Draws const labels on screen and resets the font size.
+    void drawSongTemplate();
+    void showSongScreen(const char* song_path, float battery_voltage,
+                          float volume_level);
+
+
+    int getScreenTimeoutSeconds() const;
+    void setScreenTimeoutSeconds(int seconds);
 };
+
+#endif

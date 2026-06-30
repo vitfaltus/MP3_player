@@ -1,31 +1,42 @@
-#pragma once
+#ifndef FIRMWARE_INCLUDE_PLAYLIST_HPP
+#define FIRMWARE_INCLUDE_PLAYLIST_HPP
+
 #include "audio_settings.hpp"
 #include "song.hpp"
 
 #include <SD.h>
 
-class Playlist {
+class Playlist
+{
 
-  char *m_root_path;
+    char* RootPath;
 
-  Song *m_current_song;
-  bool m_paused;
+    Song* CurrentSong;
+    bool Paused;
 
-  static char *add_dir_slash(const char *s);
-  void CreateSequentialPlaylist(const char *path);
+    static char* addDirSlash(const char* s);
+    static bool isMP3File(const char* s);
+
+    void createSequentialPlaylist(const char* path);
 
 public:
-  Playlist(const char *path);
-  ~Playlist();
+    explicit Playlist(const char* path);
+    ~Playlist();
 
-  void AddSong(const char *path);
-  void Play(const AudioSettings *audio);
-  void Stop();
-  [[nodiscard]] bool IsPaused() const;
-  void PlaylistLoop(const AudioSettings *audio);
-  void PlayNextSong(const AudioSettings *audio);
-  void PlayPreviousSong(const AudioSettings *audio);
-  void CreatePlaylist(File &current_dir);
+    void addSong(const char* path);
+    void play(const AudioSettings* audio);
+    void stop();
+    [[nodiscard]] bool isPaused() const;
+    bool playlistLoop(const AudioSettings* audio);
+    void playNextSong(const AudioSettings* audio);
+    void playPreviousSong(const AudioSettings* audio);
+    void createPlaylist(File& current_dir);
 
-  [[nodiscard]] char *GetSongName() const { return m_current_song->get_song_path(); }
+    [[nodiscard]] char* getSongName() const
+    {
+        return CurrentSong->getSongPath();
+    }
 };
+
+
+#endif

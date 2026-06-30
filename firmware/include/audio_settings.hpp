@@ -1,30 +1,34 @@
-#pragma once
+#ifndef FIRMWARE_INCLUDE_AUDIO_SETTINGS_HPP
+#define FIRMWARE_INCLUDE_AUDIO_SETTINGS_HPP
+
 #include "AudioOutputI2S.h"
 
-#pragma once
 
-class AudioSettings {
-  AudioOutputI2S *amp;
-  float m_real_volume_level = 0.3;
-  float m_virtual_volume_level;
+class AudioSettings
+{
+    AudioOutputI2S* Amp;
+    float realVolumeLevel = 0.3;
+    float VirtualVolumeLevel;
 
-  const float VOLUME_DIFF = 0.05;
+    const float VolumeDiff = 0.05;
 
 public:
-  AudioSettings();
-  ~AudioSettings();
+    AudioSettings();
+    ~AudioSettings();
 
-  float volume_up();
+    float volumeUp();
 
-  void set_volume(float level);
+    void setVolume(float level);
 
-  float volume_down();
+    float volumeDown();
 
-  void shut_audio();
+    void shutAudio();
 
-  void restore_audio();
+    void restoreAudio();
 
-  [[nodiscard]] float get_volume() const;
+    [[nodiscard]] float getVolume() const;
 
-  [[nodiscard]] AudioOutputI2S *get_audio_output() const;
+    [[nodiscard]] AudioOutputI2S* getAudioOutput() const;
 };
+
+#endif

@@ -1,50 +1,54 @@
-#pragma once
+#ifndef FIRMWARE_INCLUDE_INPUT_HANDLER_HPP
+#define FIRMWARE_INCLUDE_INPUT_HANDLER_HPP
 
-class InputHandler {
+class InputHandler
+{
 
 public:
-  InputHandler();
+    InputHandler();
 
-  enum button_press {
-    none,
-    left_button_press,
-    middle_button_press,
-    right_button_press,
-    left_button_long_press,
-    middle_button_long_press,
-    right_button_long_press
-  };
+    enum ButtonPress
+    {
+        None,
+        LeftButtonPress,
+        MiddleButtonPress,
+        RightButtonPress,
+        LeftButtonLongPress,
+        MiddleButtonLongPress,
+        RightButtonLongPress
+    };
 
-  button_press button_check();
-
-  void buttons_calibration();
+    ButtonPress checkButtons();
 
 private:
-  const int no_press_value = 940;
+    const int NoPressValue = 940;
 
-  const int left_analog_value = 1790;
-  const int middle_analog_value = 1200;
-  const int right_analog_value = 1050;
+    const int LeftAnalogValue = 1790;
+    const int MiddleAnalogValue = 1200;
+    const int RightAnalogValue = 1050;
 
-  const int long_press_threshold = 600;
-  const int short_press_threshold = 100;
+    const int LongPressThreshold = 600;
+    const int ShortPressThreshold = 100;
 
-  int debounce_timer_left = 0;
-  int debounce_timer_middle = 0;
-  int debounce_timer_right = 0;
+    int LeftDebounceTimer = 0;
+    int MiddleDebounceTimer = 0;
+    int RightDebounceTimer = 0;
 
-  const int div_cons = 8;
-  int button_panel_value = 0;
+    const int SamplesPerRead = 8;
+    int ButtonPanelValue = 0;
 
-  const int analog_read_error_margin = 45;
+    const int AnalogReadErrorMargin = 45;
 
-  [[nodiscard]] bool around_value(int reference_value, int compared_value) const;
+    [[nodiscard]] bool aroundValue(int reference_value,
+                                    int compared_value) const;
 
-  void get_button_panel_value();
+    void getButtonPanelValue();
 
-  button_press handle_left_release();
-  button_press handle_middle_release();
-  button_press handle_right_release();
+    ButtonPress handleLeftRelease();
+    ButtonPress handleMiddleRelease();
+    ButtonPress handleRightRelease();
 
-  void clear_debounce_timers();
+    void clearDebounceTimers();
 };
+
+#endif
