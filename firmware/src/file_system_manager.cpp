@@ -5,10 +5,9 @@
 #include <SD.h>
 #include <SPI.h>
 
-#define CURRENT_SONG_FILE "/.current_song_path"
 
 
-bool FileSystemManager::filesys_setup() {
+bool FileSystemManager::setup() {
   SPI.begin(PinConfig::SD_SCK, PinConfig::SD_MISO, PinConfig::SD_MOSI);
   for (int i = 0; i < 5; i++) {
     if (!SD.begin(PinConfig::SD_CS)) {
@@ -21,15 +20,15 @@ bool FileSystemManager::filesys_setup() {
 }
 
 FileSystemManager::FileSystemManager() {
-  if (!filesys_setup()) {
+  if (!setup()) {
    return;
   }
-  file_system_present = true;
+  FileSystemPresent = true;
 
 }
 
-bool FileSystemManager::get_current_song_path(std::vector<char> &path_buffer) const {
-  if (!file_system_present && !filesys_setup()) {
+bool FileSystemManager::getCurrentSongPath(std::vector<char> &path_buffer) const {
+  if (!FileSystemPresent && !setup()) {
     return false;
   }
   if (!path_buffer.empty()) {path_buffer.clear();}
@@ -46,8 +45,8 @@ bool FileSystemManager::get_current_song_path(std::vector<char> &path_buffer) co
 
 
 }
-bool FileSystemManager::set_current_song_path(const std::vector<char> &path_buffer) const {
-  if (!file_system_present && !filesys_setup()) {
+bool FileSystemManager::setCurrentSongPath(const std::vector<char> &path_buffer) const {
+  if (!FileSystemPresent && !setup()) {
     return false;
   }
 
