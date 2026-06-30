@@ -27,37 +27,54 @@ FileSystemManager::FileSystemManager() {
 
 }
 
-bool FileSystemManager::getCurrentSongPath(std::vector<char> &path_buffer) const {
+
+// when returns true -> memory has been allocated
+bool FileSystemManager::getCurrentSongPath(char* path) const {
   if (!FileSystemPresent && !setup()) {
     return false;
   }
-  if (!path_buffer.empty()) {path_buffer.clear();}
+    if (!SD.exists(CURRENT_SONG_FILE))
+    {
+        return false;
+    }
 
-  File current_song_path = SD.open(CURRENT_SONG_FILE, FILE_READ);
+  File SongFile = SD.open(CURRENT_SONG_FILE, FILE_READ);
 
-  while (current_song_path.available()) {
-    path_buffer.push_back( static_cast<char>(current_song_path.read()));
+    const size_t file_size = SongFile.size();
+    if (file_size == 0)
+    {
+        return false;
+    }
+    path = new char[1 + file_size];
+    path[file_size] = '\0';
+
+    size_t counter = 0;
+  while (SongFile.available()) {
+    path[counter] = SongFile.read();
+      counter++;
   }
-  current_song_path.close();
+  SongFile.close();
 
   return true;
 
-
-
 }
-bool FileSystemManager::setCurrentSongPath(const std::vector<char> &path_buffer) const {
+bool FileSystemManager::setCurrentSongPath(const char* path) const {
   if (!FileSystemPresent && !setup()) {
     return false;
   }
 
   SD.remove(CURRENT_SONG_FILE);
 
-  File current_song_path = SD.open(CURRENT_SONG_FILE, FILE_WRITE);
+  File SongFile = SD.open(CURRENT_SONG_FILE, FILE_WRITE);
+    Serial.print("Writing song: ");
+    Serial.println(path);
+  const char* counter = path;
+    while (*counter != '\0')
+    {
+        SongFile.write(*counter);
+        counter++;
+    }
 
-  for ( auto it: path_buffer) {
-    current_song_path.write(it);
-  }
-
-  current_song_path.close();
+  SongFile.close();
   return true;
 }

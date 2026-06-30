@@ -11,8 +11,8 @@ class FileSystemManager {
   public:
   FileSystemManager();
 
-  bool getCurrentSongPath(std::vector<char>& path) const;
-  bool setCurrentSongPath(const std::vector<char>& path) const;
+  bool getCurrentSongPath(char* path) const;
+  bool setCurrentSongPath(const char* path) const;
 
 
 

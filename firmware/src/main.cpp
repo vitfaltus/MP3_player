@@ -2,6 +2,7 @@
 #include "audio_settings.hpp"
 #include "battery_manager.hpp"
 #include "display_handler.hpp"
+#include "file_system_manager.hpp"
 #include "input_handler.hpp"
 #include "pin_config.hpp"
 #include "playlist.hpp"
@@ -18,6 +19,8 @@ AudioSettings* audio_settings;
 Playlist* playlist;
 DisplayHandler* display_handler;
 BatteryManager* battery_manager;
+FileSystemManager* file_system_manager;
+
 
 DeviceState State;
 
@@ -26,22 +29,6 @@ int read_interval_millis_battery = 5000;
 
 
 
-bool mountSDCard()
-{
-    SPI.begin(PinConfig::SD_SCK, PinConfig::SD_MISO, PinConfig::SD_MOSI);
-    for (int i = 0; i < 5; i++)
-    {
-        if (!SD.begin(PinConfig::SD_CS))
-        {
-            delay(1000);
-        }
-        else
-        {
-            return true; // SD card mounted
-        }
-    }
-    return false; // SD card not mounted
-}
 
 void changeState()
 {
@@ -65,6 +52,7 @@ void songPlayingState(const InputHandler::ButtonPress ButtonInput)
     case InputHandler::LeftButtonLongPress: // previous song
         playlist->playPreviousSong(audio_settings);
         display_handler->changeSongName(playlist->getSongName());
+        file_system_manager->setCurrentSongPath(playlist->getSongName());
         break;
     case InputHandler::MiddleButtonPress: // pause/play song
         if (playlist->isPaused())
@@ -90,6 +78,7 @@ void songPlayingState(const InputHandler::ButtonPress ButtonInput)
     case InputHandler::RightButtonLongPress: // next song
         playlist->playNextSong(audio_settings);
         display_handler->changeSongName(playlist->getSongName());
+        file_system_manager->setCurrentSongPath(playlist->getSongName());
         break;
     default:
         break;
@@ -97,6 +86,7 @@ void songPlayingState(const InputHandler::ButtonPress ButtonInput)
     if (playlist->playlistLoop(audio_settings))
     {
         display_handler->changeSongName(playlist->getSongName());
+        file_system_manager->setCurrentSongPath(playlist->getSongName());
     }
 }
 
@@ -152,14 +142,7 @@ void setup()
     battery_manager = new BatteryManager();
     Serial.println("Battery manager setup");
 
-    if (mountSDCard())
-    {
-        Serial.println("Filesystem set up");
-    }
-    else
-    {
-        Serial.println("Filesystem failed to set up");
-    }
+    file_system_manager = new FileSystemManager();
 
     State = SongPlaying;
     
@@ -175,6 +158,19 @@ void setup()
     display_handler->showSongScreen(playlist->getSongName(),
                                       BatteryManager::getBatteryVoltage(),
                                       audio_settings->getVolume());
+    char* tmp = nullptr;
+    if (!file_system_manager->getCurrentSongPath(tmp))
+    {
+        Serial.println("Failed to get current song path");
+    }
+    else
+    {
+        Serial.println(tmp);
+    }
+
+
+
+    delete[] tmp;
     
 }
 
