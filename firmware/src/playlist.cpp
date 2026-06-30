@@ -202,3 +202,7 @@ void Playlist::createPlaylist(File& current_dir)
         }
     }
 }
+char* Playlist::getSongName() const
+{
+    return CurrentSong->getSongPath();
+}

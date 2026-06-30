@@ -32,10 +32,8 @@ public:
     void playPreviousSong(const AudioSettings* audio);
     void createPlaylist(File& current_dir);
 
-    [[nodiscard]] char* getSongName() const
-    {
-        return CurrentSong->getSongPath();
-    }
+    [[nodiscard]] char* getSongName() const;
+
 };
 
 
