@@ -29,7 +29,7 @@ bool Playlist::isMP3File(const char* s)
 
     // move the pointer to the end of the string
     const char* current_char = s;
-    while (*current_char != '\n')
+    while (*current_char != '\0')
     {
         current_char++;
     }
@@ -38,11 +38,11 @@ bool Playlist::isMP3File(const char* s)
 
     for (int i = strlen(MP3Extension)-1; i >= 0 ; i--)
     {
-        if (MP3Extension[i] == *current_char)
+        current_char--;
+        if (MP3Extension[i] != *current_char)
         {
             return false;
         }
-        current_char--;
     }
     return true;
 
