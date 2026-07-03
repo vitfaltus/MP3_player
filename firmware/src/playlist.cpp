@@ -54,12 +54,14 @@ void Playlist::createSequentialPlaylist(const char* path)
     RootPath = strdup(path);
     File root_path_file = SD.open(path);
     createPlaylist(root_path_file);
+    RootSong = CurrentSong;
 }
 
 Playlist::Playlist(const char* path)
 {
     CurrentSong = nullptr;
     RootPath = nullptr;
+    RootSong = nullptr;
     this->createSequentialPlaylist(path);
     Paused = true;
 }
@@ -143,24 +145,24 @@ bool Playlist::playlistLoop(const AudioSettings* audio)
 void Playlist::playNextSong(const AudioSettings* audio)
 {
 
+    CurrentSong->freeBuffer();
+
     if (Song* next_song = CurrentSong->getNextSong())
     {
-
-        CurrentSong->freeBuffer();
-
         CurrentSong = next_song;
-        if (!Paused)
-        {
-            CurrentSong->play(audio->getAudioOutput());
-        }
-
-        Serial.print("Now playing ");
-        Serial.println(CurrentSong->getSongPath());
     }
     else
     {
-        Serial.println("No next song");
+        CurrentSong = RootSong;
     }
+
+    if (!Paused)
+    {
+        CurrentSong->play(audio->getAudioOutput());
+    }
+
+    Serial.print("Now playing ");
+    Serial.println(CurrentSong->getSongPath());
 }
 
 void Playlist::playPreviousSong(const AudioSettings* audio)

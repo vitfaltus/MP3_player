@@ -11,6 +11,8 @@ class Playlist
 
     char* RootPath;
 
+    Song* RootSong;
+
     Song* CurrentSong;
     bool Paused;
 
