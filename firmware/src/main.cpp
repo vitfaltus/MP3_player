@@ -155,23 +155,19 @@ void setup()
     playlist = new Playlist("/");
     Serial.println("Playlist created");
 
+    char* tmp = nullptr;
+    if (char** tmp_ptr = &tmp; file_system_manager->getCurrentSongPath(tmp_ptr))
+    {
+        Serial.println(tmp);
+        playlist->rollToSong(tmp);
+    }
+
+    delete[] tmp;
+
     display_handler->showSongScreen(playlist->getSongName(),
                                       BatteryManager::getBatteryVoltage(),
                                       audio_settings->getVolume());
-    char* tmp = nullptr;
-    if (!file_system_manager->getCurrentSongPath(tmp))
-    {
-        Serial.println("Failed to get current song path");
-    }
-    else
-    {
-        Serial.println(tmp);
-    }
 
-
-
-    delete[] tmp;
-    
 }
 
 

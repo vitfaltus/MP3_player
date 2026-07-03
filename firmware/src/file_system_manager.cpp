@@ -29,7 +29,7 @@ FileSystemManager::FileSystemManager() {
 
 
 // when returns true -> memory has been allocated
-bool FileSystemManager::getCurrentSongPath(char* path) const {
+bool FileSystemManager::getCurrentSongPath(char** path) const {
   if (!FileSystemPresent && !setup()) {
     return false;
   }
@@ -45,12 +45,13 @@ bool FileSystemManager::getCurrentSongPath(char* path) const {
     {
         return false;
     }
-    path = new char[1 + file_size];
-    path[file_size] = '\0';
+    *path = new char[1 + file_size];
+    (*path)[file_size] = '\0';
 
     size_t counter = 0;
   while (SongFile.available()) {
-    path[counter] = SongFile.read();
+    (*path)[counter] = SongFile.read();
+      Serial.print((*path)[counter]);
       counter++;
   }
   SongFile.close();

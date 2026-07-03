@@ -54,7 +54,6 @@ void Playlist::createSequentialPlaylist(const char* path)
     RootPath = strdup(path);
     File root_path_file = SD.open(path);
     createPlaylist(root_path_file);
-    Serial.println("Playlist created");
 }
 
 Playlist::Playlist(const char* path)
@@ -202,6 +201,20 @@ void Playlist::createPlaylist(File& current_dir)
         }
     }
 }
+void Playlist::rollToSong(const char* song_path)
+{
+    if (!song_path)
+    {
+        Serial.println("No song path");
+        return;
+    }
+    while (strcmp(CurrentSong->getSongPath(), song_path) != 0 &&  CurrentSong->getNextSong() != nullptr)
+    {
+        Serial.println("loop");
+        CurrentSong = CurrentSong->getNextSong();
+    }
+}
+
 char* Playlist::getSongName() const
 {
     return CurrentSong->getSongPath();

@@ -32,6 +32,8 @@ public:
     void playPreviousSong(const AudioSettings* audio);
     void createPlaylist(File& current_dir);
 
+    void rollToSong(const char* song_path);
+
     [[nodiscard]] char* getSongName() const;
 
 };
