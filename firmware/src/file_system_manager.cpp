@@ -49,7 +49,7 @@ bool FileSystemManager::getCurrentSongPath(char** path) const {
     (*path)[file_size] = '\0';
 
     size_t counter = 0;
-  while (SongFile.available()) {
+  while (SongFile.available() && counter < file_size) {
     (*path)[counter] = SongFile.read();
       Serial.print((*path)[counter]);
       counter++;
