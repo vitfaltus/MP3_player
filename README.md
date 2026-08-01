@@ -12,22 +12,13 @@ The device has three buttons that each recognize either a short or a long press.
 The audio is output through a 3.5 mm jack on the back side of the device. For visual feedback, there is an OLED screen above the buttons with resolution of 128x64 px.
 
 ### Ports
-USB-C, jack, sd card reader
+The device has a USB-C connector at the bottom side to allow easy recharging of the internal battery and easy serial communication with a connected computer. Other than that, it has a 3.5 mm jack on the back and an SD card reader jetting out of its side.
 
 ## Software
-The firmware is written in C++ 23 and I'm using platformio as my development platform with arduino framework. 
+The firmware is written in C++ 23 and I'm using Platformio as my development platform with Arduino framework. 
 
 ### SD card structure
-The SD card should be structured as follows:
-/
-├── songs/
-│   ├── all/
-│   │   ├── Interpret1-SongName1.mp3
-│   │   ├── Interpret1-SongName2.mp3
-│	│	└── Interpret2-SongName1.mp3
-├── system/
-|	├── playlist.txt
-│   └── settings.txt
+As of right now, the player loads all MP3 files located in the root directory of the SD card. Directories and other files are skipped. This simple approach will be reworked in the near future to allow playlist creation and song sorting.
 
 
 
