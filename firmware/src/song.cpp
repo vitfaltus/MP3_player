@@ -3,69 +3,81 @@
 #include "AudioGeneratorMP3.h"
 #include "AudioOutputI2S.h"
 
-Song::Song(const char *song_path) {
-  m_song_path = strdup(song_path);
-  m_mp3 = nullptr;
-  m_file = nullptr;
-  m_previous_song = nullptr;
-  m_next_song = nullptr;
+Song::Song(const char* song_path)
+{
+    SongPath = strdup(song_path);
+    MP3 = nullptr;
+    File = nullptr;
+    PreviousSong = nullptr;
+    NextSong = nullptr;
 }
 
-Song::~Song() {
-  free_buffer();
+Song::~Song()
+{
+    freeBuffer();
 
-  if (m_song_path) {
-    free(m_song_path);
-  }
-
-  if (m_next_song) {
-    m_next_song->set_previous_song(nullptr);
-  }
-  if (m_previous_song) {
-    m_previous_song->set_previous_song(nullptr);
-  }
-}
-
-Song *Song::get_next_song() const { return m_next_song; }
-
-Song *Song::get_previous_song() const { return m_previous_song; }
-
-void Song::set_previous_song(Song *song_ptr) { m_previous_song = song_ptr; }
-
-void Song::set_next_song(Song *song_ptr) { m_next_song = song_ptr; }
-
-bool Song::is_playing() {
-  if (m_mp3->isRunning()) {
-    if (!m_mp3->loop()) {
-      m_mp3->stop();
-      free_buffer();
-      return false;
+    if (SongPath)
+    {
+        free(SongPath);
     }
-    return true;
-  }
-  return false;
+
+    if (NextSong)
+    {
+        NextSong->setPreviousSong(nullptr);
+    }
+    if (PreviousSong)
+    {
+        PreviousSong->setPreviousSong(nullptr);
+    }
 }
 
-void Song::stop() { free_buffer(); }
+Song* Song::getNextSong() const { return NextSong; }
 
-void Song::play(AudioOutputI2S *audio_output) {
-  m_file = new AudioFileSourceSD(m_song_path);
-  m_mp3 = new AudioGeneratorMP3();
-  Serial.println("Started playing");
-  m_mp3->begin(m_file, audio_output);
+Song* Song::getPreviousSong() const { return PreviousSong; }
+
+void Song::setPreviousSong(Song* song_ptr) { PreviousSong = song_ptr; }
+
+void Song::setNextSong(Song* song_ptr) { NextSong = song_ptr; }
+
+bool Song::isPlaying()
+{
+    if (MP3->isRunning())
+    {
+        if (!MP3->loop())
+        {
+            MP3->stop();
+            freeBuffer();
+            return false;
+        }
+        return true;
+    }
+    return false;
 }
 
-char *Song::get_song_path() const { return m_song_path; }
+void Song::stop() { freeBuffer(); }
 
-void Song::free_buffer() {
-  if (m_file) {
-    m_file->close();
-    delete m_file;
-    m_file = nullptr;
-  }
-  if (m_mp3) {
-    m_mp3->stop();
-    delete m_mp3;
-    m_mp3 = nullptr;
-  }
+void Song::play(AudioOutputI2S* audio_output)
+{
+    File = new AudioFileSourceSD(SongPath);
+    MP3 = new AudioGeneratorMP3();
+    Serial.println("Started playing");
+    MP3->begin(File, audio_output);
+}
+
+char* Song::getSongPath() const { return SongPath; }
+
+void Song::freeBuffer()
+{
+    if (File)
+    {
+        File->close();
+        delete File;
+        File = nullptr;
+    }
+    if (MP3)
+    {
+        MP3->stop();
+        delete MP3;
+        MP3 = nullptr;
+    }
 }

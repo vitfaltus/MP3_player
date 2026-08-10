@@ -1,34 +1,39 @@
-#pragma once
+#ifndef FIRMWARE_INCLUDE_SONG_HPP
+#define FIRMWARE_INCLUDE_SONG_HPP
+
 #include "AudioGeneratorMP3.h"
 
 #include "AudioOutputI2S.h"
 
-class Song {
-  AudioFileSource *m_file;
-  AudioGeneratorMP3 *m_mp3;
+class Song
+{
+    AudioFileSource* File;
+    AudioGeneratorMP3* MP3;
 
-  char *m_song_path;
+    char* SongPath;
 
-  Song *m_previous_song;
-  Song *m_next_song;
+    Song* PreviousSong;
+    Song* NextSong;
 
 public:
-  Song(const char *song_path);
+    explicit Song(const char* song_path);
 
-  ~Song();
+    ~Song();
 
-  [[nodiscard]] Song *get_next_song() const;
-  [[nodiscard]] Song *get_previous_song() const;
+    [[nodiscard]] Song* getNextSong() const;
+    [[nodiscard]] Song* getPreviousSong() const;
 
-  void set_previous_song(Song *song_ptr);
-  void set_next_song(Song *song_ptr);
+    void setPreviousSong(Song* song_ptr);
+    void setNextSong(Song* song_ptr);
 
-  bool is_playing();
+    bool isPlaying();
 
-  void stop();
-  void play(AudioOutputI2S *audio_output);
+    void stop();
+    void play(AudioOutputI2S* audio_output);
 
-  [[nodiscard]] char *get_song_path() const;
+    [[nodiscard]] char* getSongPath() const;
 
-  void free_buffer();
+    void freeBuffer();
 };
+
+#endif

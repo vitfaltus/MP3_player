@@ -1,142 +1,223 @@
 #include "playlist.hpp"
-#include "audio_settings.hpp"
 #include <SD.h>
+#include "audio_settings.hpp"
 
-char *Playlist::add_dir_slash(const char *s) {
-  const size_t len = strlen(s);
+char* Playlist::addDirSlash(const char* s)
+{
+    const size_t len = strlen(s);
 
-  char *out = static_cast<char *>(malloc(len + 2));
-  if (!out) {
-    Serial.println("Path name not allocated");
-    return nullptr;
-  }
-
-  out[0] = '/';
-  memcpy(out + 1, s, len + 1);
-
-  return out;
-}
-
-void Playlist::CreateSequentialPlaylist(const char *path) {
-  m_root_path = strdup(path);
-  File root_path_file = SD.open(path);
-  CreatePlaylist(root_path_file);
-  Serial.println("Playlist created");
-}
-
-Playlist::Playlist(const char *path) {
-  m_current_song = nullptr;
-  m_root_path = nullptr;
-  this->CreateSequentialPlaylist(path);
-  m_paused = true;
-}
-
-Playlist::~Playlist() {
-  if (!m_current_song) {
-    return;
-  }
-  while (m_current_song->get_previous_song()) {
-    m_current_song = m_current_song->get_next_song();
-  }
-  Song *next_song = m_current_song->get_next_song();
-  while (m_current_song) {
-    m_current_song->~Song();
-    m_current_song = next_song;
-    next_song = m_current_song->get_next_song();
-  }
-}
-
-void Playlist::AddSong(const char *path) {
-  char *slash_name = add_dir_slash(path);
-  if (!slash_name) {
-    return;
-  }
-
-  Song *new_song = new Song(slash_name);
-
-  if (m_current_song == nullptr) {
-    m_current_song = new_song;
-  }
-
-  else {
-
-    Song *tmp = m_current_song;
-
-    while (tmp->get_next_song() != nullptr) {
-      tmp = tmp->get_next_song();
+    const auto out = static_cast<char*>(malloc(len + 2));
+    if (!out)
+    {
+        Serial.println("Path name not allocated");
+        return nullptr;
     }
 
-    tmp->set_next_song(new_song);
-    new_song->set_previous_song(tmp);
-  }
+    out[0] = '/';
+    memcpy(out + 1, s, len + 1);
+
+    return out;
 }
+bool Playlist::isMP3File(const char* s)
+{
+    constexpr char MP3Extension[] = ".mp3";
 
-void Playlist::Play(const AudioSettings *audio) {
-  m_paused = false;
-  m_current_song->play(audio->get_audio_output());
-}
-
-void Playlist::Stop() {
-  m_current_song->stop();
-  m_paused = true;
-}
-
-bool Playlist::IsPaused() const { return m_paused; }
-
-void Playlist::PlaylistLoop(const AudioSettings *audio) {
-  if (!m_paused) {
-    if (!m_current_song->is_playing()) {
-      PlayNextSong(audio);
+    if (strlen(s) <= strlen(MP3Extension))
+    {
+        return false;
     }
-  }
+
+    // move the pointer to the end of the string
+    const char* current_char = s;
+    while (*current_char != '\0')
+    {
+        current_char++;
+    }
+
+
+
+    for (int i = strlen(MP3Extension)-1; i >= 0 ; i--)
+    {
+        current_char--;
+        if (MP3Extension[i] != *current_char)
+        {
+            return false;
+        }
+    }
+    return true;
+
+
 }
 
-void Playlist::PlayNextSong(const AudioSettings *audio) {
+void Playlist::createSequentialPlaylist(const char* path)
+{
+    RootPath = strdup(path);
+    File root_path_file = SD.open(path);
+    createPlaylist(root_path_file);
+    RootSong = CurrentSong;
+}
 
-  if (Song *next_song = m_current_song->get_next_song()) {
+Playlist::Playlist(const char* path)
+{
+    CurrentSong = nullptr;
+    RootPath = nullptr;
+    RootSong = nullptr;
+    this->createSequentialPlaylist(path);
+    Paused = true;
+}
 
-    m_current_song->free_buffer();
+Playlist::~Playlist()
+{
+    if (!CurrentSong)
+    {
+        return;
+    }
+    while (CurrentSong->getPreviousSong())
+    {
+        CurrentSong = CurrentSong->getNextSong();
+    }
+    Song* next_song = CurrentSong->getNextSong();
+    while (CurrentSong)
+    {
+        CurrentSong->~Song();
+        CurrentSong = next_song;
+        next_song = CurrentSong->getNextSong();
+    }
+}
 
-    m_current_song = next_song;
-    if (!m_paused) {
-      m_current_song->play(audio->get_audio_output());
+void Playlist::addSong(const char* path)
+{
+    const char* slash_name = addDirSlash(path);
+    if (!slash_name)
+    {
+        return;
+    }
+
+    Song* new_song = new Song(slash_name);
+
+    if (CurrentSong == nullptr)
+    {
+        CurrentSong = new_song;
+    }
+
+    else
+    {
+
+        Song* tmp = CurrentSong;
+
+        while (tmp->getNextSong() != nullptr)
+        {
+            tmp = tmp->getNextSong();
+        }
+
+        tmp->setNextSong(new_song);
+        new_song->setPreviousSong(tmp);
+    }
+}
+
+void Playlist::play(const AudioSettings* audio)
+{
+    Paused = false;
+    CurrentSong->play(audio->getAudioOutput());
+}
+
+void Playlist::stop()
+{
+    CurrentSong->stop();
+    Paused = true;
+}
+
+bool Playlist::isPaused() const { return Paused; }
+
+bool Playlist::playlistLoop(const AudioSettings* audio)
+{
+    if (!Paused)
+    {
+        if (!CurrentSong->isPlaying())
+        {
+            playNextSong(audio);
+            return true;
+        }
+    }
+    return false;
+}
+
+void Playlist::playNextSong(const AudioSettings* audio)
+{
+
+    CurrentSong->freeBuffer();
+
+    if (Song* next_song = CurrentSong->getNextSong())
+    {
+        CurrentSong = next_song;
+    }
+    else
+    {
+        CurrentSong = RootSong;
+    }
+
+    if (!Paused)
+    {
+        CurrentSong->play(audio->getAudioOutput());
     }
 
     Serial.print("Now playing ");
-    Serial.println(m_current_song->get_song_path());
-  } else {
-    Serial.println("No next song");
-  }
+    Serial.println(CurrentSong->getSongPath());
 }
 
-void Playlist::PlayPreviousSong(const AudioSettings *audio) {
+void Playlist::playPreviousSong(const AudioSettings* audio)
+{
 
-  if (Song *previous_song = m_current_song->get_previous_song()) {
+    if (Song* previous_song = CurrentSong->getPreviousSong())
+    {
 
-    m_current_song->free_buffer();
+        CurrentSong->freeBuffer();
 
-    m_current_song = previous_song;
-    if (!m_paused) {
-      m_current_song->play(audio->get_audio_output());
+        CurrentSong = previous_song;
+        if (!Paused)
+        {
+            CurrentSong->play(audio->getAudioOutput());
+        }
+
+        Serial.print("Now playing ");
+        Serial.println(CurrentSong->getSongPath());
     }
-
-    Serial.print("Now playing ");
-    Serial.println(m_current_song->get_song_path());
-  } else {
-    Serial.println("No previous song");
-  }
+    else
+    {
+        Serial.println("No previous song");
+    }
 }
 
-void Playlist::CreatePlaylist(File &current_dir) {
-  while (true) {
-    File entry = current_dir.openNextFile();
-    if (!entry) {
-      break;
+void Playlist::createPlaylist(File& current_dir)
+{
+    while (true)
+    {
+        File entry = current_dir.openNextFile();
+        if (!entry)
+        {
+            break;
+        }
+        if (!entry.isDirectory() && isMP3File(entry.name()))
+        {
+            this->addSong(entry.name());
+        }
     }
-    if (entry.isDirectory()) {
-      continue;
-    } else {
-      this->AddSong(entry.name());
+}
+void Playlist::rollToSong(const char* song_path)
+{
+    if (!song_path)
+    {
+        Serial.println("No song path");
+        return;
     }
-  }
+    while (strcmp(CurrentSong->getSongPath(), song_path) != 0 &&  CurrentSong->getNextSong() != nullptr)
+    {
+        Serial.println("loop");
+        CurrentSong = CurrentSong->getNextSong();
+    }
+}
+
+char* Playlist::getSongName() const
+{
+    return CurrentSong->getSongPath();
 }
