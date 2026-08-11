@@ -115,10 +115,42 @@ void DisplayHandler::drawMenuScreen(const uint8_t selector_positon)
     Display.setCursor(4, 48);
     Display.println("Debug info");
     // rect 4
-    Display.drawRect(2, 16 + selector_positon*15, 95, 12, SSD1306_WHITE);
+    Display.drawRoundRect(2, 16 + selector_positon*15, 95, 12, 3, SSD1306_WHITE);
 
     Display.display();
 }
+
+void DisplayHandler::drawDebugScreen(multi_heap_info_t& info)
+{
+
+    uint8_t tmp_display_shift = 15;
+    heap_caps_get_info(&info, MALLOC_CAP_DEFAULT);
+
+    Display.clearDisplay();
+
+    Display.setTextWrap(false);
+    Display.setCursor(4, 18+tmp_display_shift);
+    Display.println("Free: ");
+    // string 1 copy 1
+    Display.setCursor(4, 33+tmp_display_shift);
+    Display.println("Allocated: ");
+    // string 1 copy 3
+    Display.setCursor(68, 18+tmp_display_shift);
+    Display.println(info.total_free_bytes);
+    // string 1 copy 4
+    Display.setCursor(68, 33+tmp_display_shift);
+    Display.println(info.total_allocated_bytes);
+
+    Display.setCursor(115, 18+tmp_display_shift);
+    Display.println("B");
+
+    Display.setCursor(115, 33+tmp_display_shift);
+    Display.println("B");
+
+
+    Display.display();
+}
+
 int DisplayHandler::getScreenTimeoutSeconds() const
 {
     return ReadIntervalMillis/1000;

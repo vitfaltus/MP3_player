@@ -43,6 +43,8 @@ public:
 
     void drawMenuScreen(uint8_t selector_positon);
 
+    void drawDebugScreen(multi_heap_info_t& info);
+
 
     int getScreenTimeoutSeconds() const;
     void setScreenTimeoutSeconds(int seconds);

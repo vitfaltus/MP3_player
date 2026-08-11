@@ -90,6 +90,7 @@ void DecisionMaker::songPlayingAction(InputHandler::ButtonPress buttonPress)
         break;
     case InputHandler::MiddleButtonLongPress: // change to menu
         deviceState = menu;
+        MenuSelectorPosition = 0;
         display_handler->drawMenuScreen(MenuSelectorPosition);
         break;
     case InputHandler::RightButtonPress: // volume up
@@ -110,6 +111,7 @@ void DecisionMaker::songPlayingAction(InputHandler::ButtonPress buttonPress)
         file_system_manager->setCurrentSongPath(playlist->getSongName());
     }
 }
+
 void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
 {
 
@@ -122,13 +124,30 @@ void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
 
         break;
     case InputHandler::MiddleButtonPress: // selects menu element on the selector
+        switch (MenuSelectorPosition) {
+            case 0: // song selection
+            break;
+            case 1: // settings
 
+            break;
+            case 2: // debug
+                deviceState = debug;
+                multi_heap_info_t info;
+                display_handler->drawDebugScreen(info);
+            break;
+
+            default:
+            break;
+        }
         break;
     case InputHandler::MiddleButtonLongPress: // back to song playing
         deviceState = song_playing;
         display_handler->showSongScreen(playlist->getSongName(),
                                    BatteryManager::getBatteryVoltage(),
                                    audio_settings->getVolume());
+        //resets the dimming timer
+        display_handler->displayDimmingRoutine(InputHandler::ButtonPress::MiddleButtonPress);
+
 
         break;
     case InputHandler::RightButtonPress: // cycles menu selector down
@@ -142,8 +161,17 @@ void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
     }
 }
 void DecisionMaker::songSelectAction(InputHandler::ButtonPress buttonPress) {}
+
 void DecisionMaker::settingsAction(InputHandler::ButtonPress buttonPress) {}
-void DecisionMaker::debugAction(InputHandler::ButtonPress buttonPress) {}
+
+void DecisionMaker::debugAction(InputHandler::ButtonPress buttonPress)
+{
+    if (buttonPress != InputHandler::None) {
+        deviceState = menu;
+        display_handler->drawMenuScreen(MenuSelectorPosition);
+    }
+}
+
 void DecisionMaker::shiftMenuSelectorUp()
 {
     if (MenuSelectorPosition > 0) {
@@ -152,6 +180,7 @@ void DecisionMaker::shiftMenuSelectorUp()
     display_handler->drawMenuScreen(MenuSelectorPosition);
 
 }
+
 void DecisionMaker::shiftMenuSelectorDown()
 {
     if (MenuSelectorPosition < 2) {
