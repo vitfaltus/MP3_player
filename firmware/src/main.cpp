@@ -10,14 +10,13 @@
 
 
 InputHandler* input_handler;
-Playlist* playlist;
 BatteryManager* battery_manager;
 
 
 DecisionMaker* decision_maker;
 
 unsigned long last_millis_battery = 0;
-int read_interval_millis_battery = 5000;
+int read_interval_millis_battery = 5000; // every 5 s
 
 
 void batteryRoutine()
@@ -44,8 +43,6 @@ void setup()
     battery_manager = new BatteryManager();
 
     input_handler = new InputHandler();
-    Serial.println("Input handler setup");
-
 
 }
 

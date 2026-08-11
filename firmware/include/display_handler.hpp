@@ -41,6 +41,9 @@ public:
                           float volume_level);
 
 
+    void drawMenuScreen(uint8_t selector_positon);
+
+
     int getScreenTimeoutSeconds() const;
     void setScreenTimeoutSeconds(int seconds);
 };

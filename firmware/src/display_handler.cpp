@@ -99,6 +99,24 @@ void DisplayHandler::showSongScreen(const char* song_path,
     drawPause();
     dimScreen(false);
 }
+void DisplayHandler::drawMenuScreen(const uint8_t selector_positon)
+{
+    Display.clearDisplay();
+    Display.setTextSize(1);
+
+    Display.setTextWrap(false);
+
+    Display.setCursor(4, 18);
+    Display.println("Songs selection");
+    // string 1 copy 1
+    Display.setCursor(4, 33);
+    Display.println("Settings");
+    // string 1 copy 2
+    Display.setCursor(4, 48);
+    Display.println("Debug info");
+    // rect 4
+    Display.drawRect(2, 16 + selector_positon*15, 95, 12, 0xFFFF);
+}
 int DisplayHandler::getScreenTimeoutSeconds() const
 {
     return ReadIntervalMillis/1000;

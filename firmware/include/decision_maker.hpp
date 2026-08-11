@@ -20,16 +20,26 @@ class DecisionMaker
 {
     DeviceState deviceState;
 
+    // device subsystems TODO rename to PascalCase
     DisplayHandler* display_handler;
     FileSystemManager* file_system_manager;
     AudioSettings* audio_settings;
     Playlist* playlist;
 
+    // menu selector
+    uint8_t MenuSelectorPosition;
 
-
-
+    // --- methods correspondent to all possible device states ---
     void songPlayingAction(InputHandler::ButtonPress buttonPress);
+    void menuAction(InputHandler::ButtonPress buttonPress);
+    void songSelectAction(InputHandler::ButtonPress buttonPress);
+    void settingsAction(InputHandler::ButtonPress buttonPress);
+    void debugAction(InputHandler::ButtonPress buttonPress);
 
+
+    // menu state related methods
+    void shiftMenuSelectorUp();
+    void shiftMenuSelectorDown();
 
     public:
     DecisionMaker();
@@ -37,7 +47,7 @@ class DecisionMaker
 
     void performedAction(InputHandler::ButtonPress buttonPress);
 
-    DisplayHandler* getDisplayHandler();
+    DisplayHandler* getDisplayHandler() const;
 };
 
 #endif // FIRMWARE_DECISION_MAKER_HPP
