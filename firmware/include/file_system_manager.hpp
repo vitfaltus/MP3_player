@@ -1,4 +1,4 @@
-
+#pragma once
 #define CURRENT_SONG_FILE "/.current_song_path"
 
 
