@@ -116,6 +116,8 @@ void DisplayHandler::drawMenuScreen(const uint8_t selector_positon)
     Display.println("Debug info");
     // rect 4
     Display.drawRect(2, 16 + selector_positon*15, 95, 12, 0xFFFF);
+
+    Display.display();
 }
 int DisplayHandler::getScreenTimeoutSeconds() const
 {
