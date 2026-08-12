@@ -20,7 +20,7 @@ class DecisionMaker
 {
     DeviceState deviceState;
 
-    // device subsystems TODO rename to PascalCase
+    // device subsystems TODO refactor with PascalCase
     DisplayHandler* display_handler;
     FileSystemManager* file_system_manager;
     AudioSettings* audio_settings;

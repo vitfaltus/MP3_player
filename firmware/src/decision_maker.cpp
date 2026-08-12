@@ -89,6 +89,9 @@ void DecisionMaker::songPlayingAction(InputHandler::ButtonPress buttonPress)
         }
         break;
     case InputHandler::MiddleButtonLongPress: // change to menu
+        playlist->stop();
+        audio_settings->shutAudio();
+
         deviceState = menu;
         MenuSelectorPosition = 0;
         display_handler->drawMenuScreen(MenuSelectorPosition);
