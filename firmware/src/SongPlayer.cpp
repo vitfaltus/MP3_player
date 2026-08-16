@@ -1,8 +1,8 @@
-#include "playlist.hpp"
+#include "SongPlayer.hpp"
 #include <SD.h>
 #include "audio_settings.hpp"
 
-char* Playlist::addDirSlash(const char* s)
+char* SongPlayer::addDirSlash(const char* s)
 {
     const size_t len = strlen(s);
 
@@ -18,7 +18,7 @@ char* Playlist::addDirSlash(const char* s)
 
     return out;
 }
-bool Playlist::isMP3File(const char* s)
+bool SongPlayer::isMP3File(const char* s)
 {
     constexpr char MP3Extension[] = ".mp3";
 
@@ -49,7 +49,7 @@ bool Playlist::isMP3File(const char* s)
 
 }
 
-void Playlist::createSequentialPlaylist(const char* path)
+void SongPlayer::createSequentialPlaylist(const char* path)
 {
     RootPath = strdup(path);
     File root_path_file = SD.open(path);
@@ -57,7 +57,7 @@ void Playlist::createSequentialPlaylist(const char* path)
     RootSong = CurrentSong;
 }
 
-Playlist::Playlist(const char* path)
+SongPlayer::SongPlayer(const char* path)
 {
     CurrentSong = nullptr;
     RootPath = nullptr;
@@ -66,7 +66,7 @@ Playlist::Playlist(const char* path)
     Paused = true;
 }
 
-Playlist::~Playlist()
+SongPlayer::~SongPlayer()
 {
     if (!CurrentSong)
     {
@@ -85,7 +85,7 @@ Playlist::~Playlist()
     }
 }
 
-void Playlist::addSong(const char* path)
+void SongPlayer::addSong(const char* path)
 {
     const char* slash_name = addDirSlash(path);
     if (!slash_name)
@@ -115,21 +115,21 @@ void Playlist::addSong(const char* path)
     }
 }
 
-void Playlist::play(const AudioSettings* audio)
+void SongPlayer::play(const AudioSettings* audio)
 {
     Paused = false;
     CurrentSong->play(audio->getAudioOutput());
 }
 
-void Playlist::stop()
+void SongPlayer::stop()
 {
     CurrentSong->stop();
     Paused = true;
 }
 
-bool Playlist::isPaused() const { return Paused; }
+bool SongPlayer::isPaused() const { return Paused; }
 
-bool Playlist::playlistLoop(const AudioSettings* audio)
+bool SongPlayer::playerLoop(const AudioSettings* audio)
 {
     if (!Paused)
     {
@@ -142,7 +142,7 @@ bool Playlist::playlistLoop(const AudioSettings* audio)
     return false;
 }
 
-void Playlist::playNextSong(const AudioSettings* audio)
+void SongPlayer::playNextSong(const AudioSettings* audio)
 {
 
     CurrentSong->freeBuffer();
@@ -165,7 +165,7 @@ void Playlist::playNextSong(const AudioSettings* audio)
     Serial.println(CurrentSong->getSongPath());
 }
 
-void Playlist::playPreviousSong(const AudioSettings* audio)
+void SongPlayer::playPreviousSong(const AudioSettings* audio)
 {
 
     if (Song* previous_song = CurrentSong->getPreviousSong())
@@ -188,7 +188,7 @@ void Playlist::playPreviousSong(const AudioSettings* audio)
     }
 }
 
-void Playlist::createPlaylist(File& current_dir)
+void SongPlayer::createPlaylist(File& current_dir)
 {
     while (true)
     {
@@ -203,7 +203,7 @@ void Playlist::createPlaylist(File& current_dir)
         }
     }
 }
-void Playlist::rollToSong(const char* song_path)
+void SongPlayer::rollToSong(const char* song_path)
 {
     if (!song_path)
     {
@@ -217,7 +217,7 @@ void Playlist::rollToSong(const char* song_path)
     }
 }
 
-char* Playlist::getSongName() const
+char* SongPlayer::getSongName() const
 {
     return CurrentSong->getSongPath();
 }

@@ -8,7 +8,7 @@ DecisionMaker::DecisionMaker()
     display_handler = new DisplayHandler();
     file_system_manager = new FileSystemManager();
     audio_settings = new AudioSettings();
-    playlist = new Playlist("/");
+    playlist = new SongPlayer("/");
 
     // setting current song as the one saved in the .current_song
     char* tmp = nullptr;
@@ -108,7 +108,7 @@ void DecisionMaker::songPlayingAction(InputHandler::ButtonPress buttonPress)
     default:
         break;
     }
-    if (playlist->playlistLoop(audio_settings))
+    if (playlist->playerLoop(audio_settings))
     {
         display_handler->changeSongName(playlist->getSongName());
         file_system_manager->setCurrentSongPath(playlist->getSongName());
@@ -129,9 +129,10 @@ void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
     case InputHandler::MiddleButtonPress: // selects menu element on the selector
         switch (MenuSelectorPosition) {
             case 0: // song selection
+                deviceState = song_select;
             break;
             case 1: // settings
-
+                deviceState = settings;
             break;
             case 2: // debug
                 deviceState = debug;

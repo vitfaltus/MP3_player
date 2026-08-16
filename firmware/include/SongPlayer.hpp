@@ -6,7 +6,7 @@
 
 #include <SD.h>
 
-class Playlist
+class SongPlayer
 {
 
     char* RootPath;
@@ -22,14 +22,14 @@ class Playlist
     void createSequentialPlaylist(const char* path);
 
 public:
-    explicit Playlist(const char* path);
-    ~Playlist();
+    explicit SongPlayer(const char* path);
+    ~SongPlayer();
 
     void addSong(const char* path);
     void play(const AudioSettings* audio);
     void stop();
     [[nodiscard]] bool isPaused() const;
-    bool playlistLoop(const AudioSettings* audio);
+    bool playerLoop(const AudioSettings* audio);
     void playNextSong(const AudioSettings* audio);
     void playPreviousSong(const AudioSettings* audio);
     void createPlaylist(File& current_dir);

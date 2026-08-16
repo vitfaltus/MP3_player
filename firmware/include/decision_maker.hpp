@@ -5,7 +5,7 @@
 #include "display_handler.hpp"
 #include "file_system_manager.hpp"
 #include "input_handler.hpp"
-#include "playlist.hpp"
+#include "SongPlayer.hpp"
 
 enum DeviceState
 {
@@ -24,7 +24,7 @@ class DecisionMaker
     DisplayHandler* display_handler;
     FileSystemManager* file_system_manager;
     AudioSettings* audio_settings;
-    Playlist* playlist;
+    SongPlayer* playlist;
 
     // menu selector
     uint8_t MenuSelectorPosition;
