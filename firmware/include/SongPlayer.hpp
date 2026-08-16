@@ -1,5 +1,5 @@
-#ifndef FIRMWARE_INCLUDE_PLAYLIST_HPP
-#define FIRMWARE_INCLUDE_PLAYLIST_HPP
+#ifndef FIRMWARE_INCLUDE_SONGPLAYER_HPP
+#define FIRMWARE_INCLUDE_SONGPLAYER_HPP
 
 #include "audio_settings.hpp"
 #include "song.hpp"
