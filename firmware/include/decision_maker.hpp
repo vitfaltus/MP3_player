@@ -24,10 +24,14 @@ class DecisionMaker
     DisplayHandler* display_handler;
     FileSystemManager* file_system_manager;
     AudioSettings* audio_settings;
-    SongPlayer* playlist;
+    SongPlayer* song_player;
 
     // menu selector
     uint8_t MenuSelectorPosition;
+
+    // song select variables
+    std::array<char*, 3> DisplaySongArr;
+    uint8_t SongSelectSelectorPosition;
 
     // --- methods correspondent to all possible device states ---
     void songPlayingAction(InputHandler::ButtonPress buttonPress);
@@ -40,6 +44,15 @@ class DecisionMaker
     // menu state related methods
     void shiftMenuSelectorUp();
     void shiftMenuSelectorDown();
+    void changeToMenu();
+
+
+    // song select related methods
+    void fetchAndDisplaySongs();
+    void shiftSongSelectorUp();
+    void shiftSongSelectorDown();
+    void changeToSongPlaying();
+
 
     public:
     DecisionMaker();

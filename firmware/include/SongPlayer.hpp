@@ -36,6 +36,9 @@ public:
 
     void rollToSong(const char* song_path);
 
+    // false -> data in names invalid
+    bool getThreeSongNames(unsigned song_start_position, std::array<char*, 3>& DisplaySongArr) const;
+
     [[nodiscard]] char* getSongName() const;
 
 };

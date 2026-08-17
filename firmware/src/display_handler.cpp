@@ -151,6 +151,27 @@ void DisplayHandler::drawDebugScreen(multi_heap_info_t& info)
     Display.display();
 }
 
+void DisplayHandler::drawSongSelectScreen(const std::array<char*, 3>& DisplaySongArr)
+{
+    Display.clearDisplay();
+    Display.setTextSize(1);
+
+    Display.setTextWrap(false);
+
+    Display.setCursor(4, 18);
+    Display.println(DisplaySongArr[0]);
+    // string 1 copy 1
+    Display.setCursor(4, 33);
+    Display.println(DisplaySongArr[1]);
+    // string 1 copy 2
+    Display.setCursor(4, 48);
+    Display.println(DisplaySongArr[2]);
+    // rect 4
+    Display.drawRoundRect(2, 31, 126, 12, 3, SSD1306_WHITE);
+
+    Display.display();
+}
+
 int DisplayHandler::getScreenTimeoutSeconds() const
 {
     return ReadIntervalMillis/1000;
@@ -158,6 +179,19 @@ int DisplayHandler::getScreenTimeoutSeconds() const
 void DisplayHandler::setScreenTimeoutSeconds(const int seconds)
 {
     ReadIntervalMillis = seconds*1000;
+}
+
+void DisplayHandler::displayErrorMessage(const char* error_message, const uint8_t delay_time)
+{
+    Display.clearDisplay();
+
+    Display.setTextWrap(true);
+    Display.setCursor(4, 33);
+
+    Display.println(error_message);
+    Display.display();
+
+    delay(delay_time*1000);
 }
 
 void DisplayHandler::drawOnBoot()

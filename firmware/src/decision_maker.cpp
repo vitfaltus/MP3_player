@@ -8,22 +8,23 @@ DecisionMaker::DecisionMaker()
     display_handler = new DisplayHandler();
     file_system_manager = new FileSystemManager();
     audio_settings = new AudioSettings();
-    playlist = new SongPlayer("/");
+    song_player = new SongPlayer("/");
 
     // setting current song as the one saved in the .current_song
     char* tmp = nullptr;
     if (char** tmp_ptr = &tmp; file_system_manager->getCurrentSongPath(tmp_ptr))
     {
-        playlist->rollToSong(tmp);
+        song_player->rollToSong(tmp);
     }
 
     delete[] tmp;
 
-    display_handler->showSongScreen(playlist->getSongName(),
+    display_handler->showSongScreen(song_player->getSongName(),
                                     BatteryManager::getBatteryVoltage(),
                                     audio_settings->getVolume());
 
     MenuSelectorPosition = 0;
+    SongSelectSelectorPosition = 0;
 }
 
 // calls method of the current state of the machine, passes the buttonPress as a param
@@ -70,48 +71,46 @@ void DecisionMaker::songPlayingAction(InputHandler::ButtonPress buttonPress)
         display_handler->changeVolumeLevel(audio_settings->getVolume());
         break;
     case InputHandler::LeftButtonLongPress: // previous song
-        playlist->playPreviousSong(audio_settings);
-        display_handler->changeSongName(playlist->getSongName());
-        file_system_manager->setCurrentSongPath(playlist->getSongName());
+        song_player->playPreviousSong(audio_settings);
+        display_handler->changeSongName(song_player->getSongName());
+        file_system_manager->setCurrentSongPath(song_player->getSongName());
         break;
     case InputHandler::MiddleButtonPress: // pause/play song
-        if (playlist->isPaused())
+        if (song_player->isPaused())
         {
-            playlist->play(audio_settings);
+            song_player->play(audio_settings);
             audio_settings->restoreAudio();
             display_handler->drawPlay();
         }
         else
         {
-            playlist->stop();
+            song_player->stop();
             audio_settings->shutAudio();
             display_handler->drawPause();
         }
         break;
     case InputHandler::MiddleButtonLongPress: // change to menu
-        playlist->stop();
+        song_player->stop();
         audio_settings->shutAudio();
 
-        deviceState = menu;
-        MenuSelectorPosition = 0;
-        display_handler->drawMenuScreen(MenuSelectorPosition);
+        changeToMenu();
         break;
     case InputHandler::RightButtonPress: // volume up
         audio_settings->volumeUp();
         display_handler->changeVolumeLevel(audio_settings->getVolume());
         break;
     case InputHandler::RightButtonLongPress: // next song
-        playlist->playNextSong(audio_settings);
-        display_handler->changeSongName(playlist->getSongName());
-        file_system_manager->setCurrentSongPath(playlist->getSongName());
+        song_player->playNextSong(audio_settings);
+        display_handler->changeSongName(song_player->getSongName());
+        file_system_manager->setCurrentSongPath(song_player->getSongName());
         break;
     default:
         break;
     }
-    if (playlist->playerLoop(audio_settings))
+    if (song_player->playerLoop(audio_settings))
     {
-        display_handler->changeSongName(playlist->getSongName());
-        file_system_manager->setCurrentSongPath(playlist->getSongName());
+        display_handler->changeSongName(song_player->getSongName());
+        file_system_manager->setCurrentSongPath(song_player->getSongName());
     }
 }
 
@@ -130,6 +129,9 @@ void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
         switch (MenuSelectorPosition) {
             case 0: // song selection
                 deviceState = song_select;
+
+                SongSelectSelectorPosition = 0;
+                fetchAndDisplaySongs();
             break;
             case 1: // settings
                 deviceState = settings;
@@ -145,12 +147,7 @@ void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
         }
         break;
     case InputHandler::MiddleButtonLongPress: // back to song playing
-        deviceState = song_playing;
-        display_handler->showSongScreen(playlist->getSongName(),
-                                   BatteryManager::getBatteryVoltage(),
-                                   audio_settings->getVolume());
-        //resets the dimming timer
-        display_handler->displayDimmingRoutine(InputHandler::ButtonPress::MiddleButtonPress);
+        changeToSongPlaying();
 
 
         break;
@@ -164,15 +161,69 @@ void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
         break;
     }
 }
-void DecisionMaker::songSelectAction(InputHandler::ButtonPress buttonPress) {}
+void DecisionMaker::songSelectAction(InputHandler::ButtonPress buttonPress)
+{
+    switch (buttonPress)
+    {
+    case InputHandler::LeftButtonPress:  // cycle up
+        shiftSongSelectorUp();
+        fetchAndDisplaySongs();
 
-void DecisionMaker::settingsAction(InputHandler::ButtonPress buttonPress) {}
+        break;
+    case InputHandler::LeftButtonLongPress:
+
+        break;
+    case InputHandler::MiddleButtonPress: // select song
+        song_player->rollToSong(DisplaySongArr[1]);
+        changeToSongPlaying();
+        file_system_manager->setCurrentSongPath(song_player->getSongName());
+        break;
+    case InputHandler::MiddleButtonLongPress: // back to menu
+        changeToMenu();
+        break;
+    case InputHandler::RightButtonPress: // cycle down
+        shiftSongSelectorDown();
+        fetchAndDisplaySongs();
+        break;
+    case InputHandler::RightButtonLongPress:
+
+        break;
+    default:
+        break;
+    }
+}
+
+void DecisionMaker::settingsAction(InputHandler::ButtonPress buttonPress)
+{
+    switch (buttonPress)
+    {
+    case InputHandler::LeftButtonPress:
+
+        break;
+    case InputHandler::LeftButtonLongPress:
+
+        break;
+    case InputHandler::MiddleButtonPress:
+
+        break;
+    case InputHandler::MiddleButtonLongPress:
+
+        break;
+    case InputHandler::RightButtonPress:
+
+        break;
+    case InputHandler::RightButtonLongPress:
+
+        break;
+    default:
+        break;
+    }
+}
 
 void DecisionMaker::debugAction(InputHandler::ButtonPress buttonPress)
 {
     if (buttonPress != InputHandler::None) {
-        deviceState = menu;
-        display_handler->drawMenuScreen(MenuSelectorPosition);
+        changeToMenu();
     }
 }
 
@@ -191,6 +242,49 @@ void DecisionMaker::shiftMenuSelectorDown()
         MenuSelectorPosition++;
     }
     display_handler->drawMenuScreen(MenuSelectorPosition);
+}
+
+void DecisionMaker::changeToMenu()
+{
+    deviceState = menu;
+    MenuSelectorPosition = 0;
+    display_handler->drawMenuScreen(MenuSelectorPosition);
+}
+
+void DecisionMaker::fetchAndDisplaySongs()
+{
+    if (!song_player->getThreeSongNames(SongSelectSelectorPosition, DisplaySongArr))
+    {
+        display_handler->displayErrorMessage("Song display error", 3);
+        changeToMenu();
+        return;
+    }
+    display_handler->drawSongSelectScreen(DisplaySongArr);
+}
+
+void DecisionMaker::shiftSongSelectorUp()
+{
+    if (SongSelectSelectorPosition > 0)
+    {
+        SongSelectSelectorPosition--;
+    }
+
+}
+
+void DecisionMaker::shiftSongSelectorDown()
+{
+    SongSelectSelectorPosition++;
+    Serial.println(SongSelectSelectorPosition);
+}
+
+void DecisionMaker::changeToSongPlaying()
+{
+    deviceState = song_playing;
+    display_handler->showSongScreen(song_player->getSongName(),
+                               BatteryManager::getBatteryVoltage(),
+                               audio_settings->getVolume());
+    //reset the dimming timer
+    display_handler->displayDimmingRoutine(InputHandler::ButtonPress::MiddleButtonPress);
 }
 
 

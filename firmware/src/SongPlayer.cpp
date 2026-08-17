@@ -210,11 +210,40 @@ void SongPlayer::rollToSong(const char* song_path)
         Serial.println("No song path");
         return;
     }
+    CurrentSong = RootSong;
     while (strcmp(CurrentSong->getSongPath(), song_path) != 0 &&  CurrentSong->getNextSong() != nullptr)
     {
-        Serial.println("loop");
         CurrentSong = CurrentSong->getNextSong();
     }
+} 
+
+bool SongPlayer::getThreeSongNames(unsigned song_start_position,std::array<char*, 3>& DisplaySongArr) const
+{
+    if (RootSong == nullptr){return false;}
+
+    if (song_start_position == 0){song_start_position = 1;}
+
+    unsigned counter = 1;
+
+    Song* current_song = RootSong;
+    if (current_song->getNextSong() == nullptr){return false;}
+    current_song = current_song->getNextSong();
+
+    while (counter < song_start_position-1 && current_song->getNextSong() != nullptr)
+    {
+        current_song = current_song->getNextSong();
+        counter++;
+    }
+
+    if (current_song->getPreviousSong() == nullptr) { return false;}
+    DisplaySongArr[0] = current_song->getPreviousSong()->getSongPath();
+
+    DisplaySongArr[1] = current_song->getSongPath();
+
+    if (current_song->getNextSong() == nullptr) { return false;}
+    DisplaySongArr[2] = current_song->getNextSong()->getSongPath();
+
+    return true;
 }
 
 char* SongPlayer::getSongName() const
