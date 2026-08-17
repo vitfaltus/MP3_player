@@ -108,13 +108,13 @@ void DisplayHandler::drawMenuScreen(const uint8_t selector_positon)
 
     Display.setCursor(4, 18);
     Display.println("Songs selection");
-    // string 1 copy 1
+
     Display.setCursor(4, 33);
     Display.println("Settings");
-    // string 1 copy 2
+
     Display.setCursor(4, 48);
     Display.println("Debug info");
-    // rect 4
+
     Display.drawRoundRect(2, 16 + selector_positon*15, 95, 12, 3, SSD1306_WHITE);
 
     Display.display();
@@ -131,13 +131,13 @@ void DisplayHandler::drawDebugScreen(multi_heap_info_t& info)
     Display.setTextWrap(false);
     Display.setCursor(4, 18+tmp_display_shift);
     Display.println("Free: ");
-    // string 1 copy 1
+
     Display.setCursor(4, 33+tmp_display_shift);
     Display.println("Allocated: ");
-    // string 1 copy 3
+
     Display.setCursor(68, 18+tmp_display_shift);
     Display.println(info.total_free_bytes);
-    // string 1 copy 4
+
     Display.setCursor(68, 33+tmp_display_shift);
     Display.println(info.total_allocated_bytes);
 
@@ -160,13 +160,13 @@ void DisplayHandler::drawSongSelectScreen(const std::array<char*, 3>& DisplaySon
 
     Display.setCursor(4, 18);
     Display.println(DisplaySongArr[0]);
-    // string 1 copy 1
+
     Display.setCursor(4, 33);
     Display.println(DisplaySongArr[1]);
-    // string 1 copy 2
+
     Display.setCursor(4, 48);
     Display.println(DisplaySongArr[2]);
-    // rect 4
+
     Display.drawRoundRect(2, 31, 126, 12, 3, SSD1306_WHITE);
 
     Display.display();
