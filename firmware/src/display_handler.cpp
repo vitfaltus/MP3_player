@@ -151,7 +151,7 @@ void DisplayHandler::drawDebugScreen(multi_heap_info_t& info)
     Display.display();
 }
 
-void DisplayHandler::drawSongSelectScreen(const std::array<char*, 3>& DisplaySongArr)
+void DisplayHandler::drawSongSelectScreen(const std::array<char*, 3>& DisplaySongArr, uint8_t selector_positon)
 {
     Display.clearDisplay();
     Display.setTextSize(1);
@@ -167,7 +167,7 @@ void DisplayHandler::drawSongSelectScreen(const std::array<char*, 3>& DisplaySon
     Display.setCursor(4, 48);
     Display.println(DisplaySongArr[2]);
 
-    Display.drawRoundRect(2, 31, 126, 12, 3, SSD1306_WHITE);
+    Display.drawRoundRect(2, 16 + selector_positon*15, 126, 12, 3, SSD1306_WHITE);
 
     Display.display();
 }

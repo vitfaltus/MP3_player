@@ -174,7 +174,14 @@ void DecisionMaker::songSelectAction(InputHandler::ButtonPress buttonPress)
 
         break;
     case InputHandler::MiddleButtonPress: // select song
-        song_player->rollToSong(DisplaySongArr[1]);
+        if (SongSelectSelectorPosition == 0)
+        {
+            song_player->rollToSong(DisplaySongArr[0]);
+        }
+        else
+        {
+            song_player->rollToSong(DisplaySongArr[1]);
+        }
         changeToSongPlaying();
         file_system_manager->setCurrentSongPath(song_player->getSongName());
         break;
@@ -259,7 +266,15 @@ void DecisionMaker::fetchAndDisplaySongs()
         changeToMenu();
         return;
     }
-    display_handler->drawSongSelectScreen(DisplaySongArr);
+    if (SongSelectSelectorPosition == 0)
+    {
+        display_handler->drawSongSelectScreen(DisplaySongArr, 0);
+    }
+    else
+    {
+        display_handler->drawSongSelectScreen(DisplaySongArr, 1);
+    }
+
 }
 
 void DecisionMaker::shiftSongSelectorUp()
@@ -274,7 +289,6 @@ void DecisionMaker::shiftSongSelectorUp()
 void DecisionMaker::shiftSongSelectorDown()
 {
     SongSelectSelectorPosition++;
-    Serial.println(SongSelectSelectorPosition);
 }
 
 void DecisionMaker::changeToSongPlaying()

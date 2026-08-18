@@ -45,7 +45,7 @@ public:
 
     void drawDebugScreen(multi_heap_info_t& info);
 
-    void drawSongSelectScreen(const std::array<char*, 3>& DisplaySongArr);
+    void drawSongSelectScreen(const std::array<char*, 3>& DisplaySongArr, uint8_t selector_positon);
 
     int getScreenTimeoutSeconds() const;
     void setScreenTimeoutSeconds(int seconds);
