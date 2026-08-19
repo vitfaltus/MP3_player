@@ -14,7 +14,7 @@ class C_FileSystemManager {
   C_FileSystemManager();
 
   bool getCurrentSongPath(char** path) const;
-  bool setCurrentSongPath(const char* path) const;
+  void setCurrentSongPath(const char* path) const;
 
 
     [[nodiscard]] float getDefaultVolume() const;

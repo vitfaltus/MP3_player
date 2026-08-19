@@ -59,7 +59,7 @@ bool C_FileSystemManager::getCurrentSongPath(char** path) const {
   return true;
 
 }
-bool C_FileSystemManager::setCurrentSongPath(const char* path) const {
+void C_FileSystemManager::setCurrentSongPath(const char* path) const {
   if (!FileSystemPresent && !setup()) {
     return false;
   }

@@ -64,11 +64,10 @@ class DecisionMaker
 
     public:
     DecisionMaker();
-    ~DecisionMaker();
 
     void performedAction(InputHandler::ButtonPress buttonPress);
 
-    C_DisplayHandler* getDisplayHandler() const;
+    [[nodiscard]] C_DisplayHandler* getDisplayHandler() const;
 };
 
 #endif // FIRMWARE_DECISION_MAKER_HPP

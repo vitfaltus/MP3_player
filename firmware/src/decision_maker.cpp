@@ -33,7 +33,7 @@ DecisionMaker::DecisionMaker()
 }
 
 // calls method of the current state of the machine, passes the buttonPress as a param
-void DecisionMaker::performedAction(InputHandler::ButtonPress buttonPress)
+void DecisionMaker::performedAction(const InputHandler::ButtonPress buttonPress)
 {
     switch (DeviceState)
     {
@@ -68,7 +68,7 @@ C_DisplayHandler* DecisionMaker::getDisplayHandler() const
     return DisplayHandler;
 }
 
-void DecisionMaker::songPlayingAction(InputHandler::ButtonPress buttonPress)
+void DecisionMaker::songPlayingAction(const InputHandler::ButtonPress buttonPress)
 {
     if (DisplayHandler->displayDimmingRoutine(buttonPress))
     {
@@ -125,7 +125,7 @@ void DecisionMaker::songPlayingAction(InputHandler::ButtonPress buttonPress)
     }
 }
 
-void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
+void DecisionMaker::menuAction(const InputHandler::ButtonPress buttonPress)
 {
 
     switch (buttonPress)
@@ -167,7 +167,7 @@ void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
     }
 }
 
-void DecisionMaker::songSelectAction(InputHandler::ButtonPress buttonPress)
+void DecisionMaker::songSelectAction(const InputHandler::ButtonPress buttonPress)
 {
     switch (buttonPress)
     {
@@ -200,7 +200,7 @@ void DecisionMaker::songSelectAction(InputHandler::ButtonPress buttonPress)
     }
 }
 
-void DecisionMaker::settingsAction(InputHandler::ButtonPress buttonPress)
+void DecisionMaker::settingsAction(const InputHandler::ButtonPress buttonPress)
 {
     switch (buttonPress)
     {
@@ -236,7 +236,7 @@ void DecisionMaker::settingsAction(InputHandler::ButtonPress buttonPress)
     }
 }
 
-void DecisionMaker::settingsVolumeAction(InputHandler::ButtonPress buttonPress)
+void DecisionMaker::settingsVolumeAction(const InputHandler::ButtonPress buttonPress)
 {
     switch (buttonPress)
     {
@@ -261,7 +261,7 @@ void DecisionMaker::settingsVolumeAction(InputHandler::ButtonPress buttonPress)
     }
 }
 
-void DecisionMaker::settingsTimeoutAction(InputHandler::ButtonPress buttonPress)
+void DecisionMaker::settingsTimeoutAction(const InputHandler::ButtonPress buttonPress)
 {
     switch (buttonPress)
     {
@@ -286,7 +286,7 @@ void DecisionMaker::settingsTimeoutAction(InputHandler::ButtonPress buttonPress)
     }
 }
 
-void DecisionMaker::debugAction(InputHandler::ButtonPress buttonPress)
+void DecisionMaker::debugAction(const InputHandler::ButtonPress buttonPress)
 {
     if (buttonPress != InputHandler::None) {
         changeToMenu();
