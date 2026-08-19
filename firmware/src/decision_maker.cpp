@@ -262,10 +262,9 @@ void DecisionMaker::settingsVolumeAction(InputHandler::ButtonPress buttonPress)
     switch (buttonPress)
     {
     case InputHandler::LeftButtonPress:
-
-        break;
-    case InputHandler::LeftButtonLongPress:
-
+        audio_settings->volumeDown();
+        display_handler->drawSettingsDefaultVolume(audio_settings->getVolume());
+        file_system_manager->setDefaultVolume(audio_settings->getVolume());
         break;
     case InputHandler::MiddleButtonPress:
         changeToMenu();
@@ -274,10 +273,9 @@ void DecisionMaker::settingsVolumeAction(InputHandler::ButtonPress buttonPress)
         changeToMenu();
         break;
     case InputHandler::RightButtonPress:
-
-        break;
-    case InputHandler::RightButtonLongPress:
-
+        audio_settings->volumeUp();
+        display_handler->drawSettingsDefaultVolume(audio_settings->getVolume());
+        file_system_manager->setDefaultVolume(audio_settings->getVolume());
         break;
     default:
         break;
