@@ -37,7 +37,6 @@ class DecisionMaker
     // settings related vars
     uint8_t SettingsSelectorPosition;
 
-
     // --- methods correspondent to all possible device states ---
     void songPlayingAction(InputHandler::ButtonPress buttonPress);
     void menuAction(InputHandler::ButtonPress buttonPress);
@@ -47,12 +46,10 @@ class DecisionMaker
     void settingsTimeoutAction(InputHandler::ButtonPress buttonPress);
     void debugAction(InputHandler::ButtonPress buttonPress);
 
-
     // menu state related methods
     void shiftMenuSelectorUp();
     void shiftMenuSelectorDown();
     void changeToMenu();
-
 
     // song select related methods
     void fetchAndDisplaySongs();
@@ -63,12 +60,7 @@ class DecisionMaker
     // settings related methods
     void shiftSettingsSelectorUp();
     void shiftSettingsSelectorDown();
-    //void changeToSettings();
-
-    //void changeToSettingVolume();
-    //void changeToSettingTimeout();
-    
-
+    void changeToSettings();
 
     public:
     DecisionMaker();

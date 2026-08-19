@@ -145,10 +145,7 @@ void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
                 fetchAndDisplaySongs();
             break;
             case 1: // settings
-                DeviceState = settings;
-
-                //changeToSettings();
-                DisplayHandler->drawSettingsScreen(SettingsSelectorPosition);
+                changeToSettings();
             break;
             case 2: // debug
                 DeviceState = debug;
@@ -267,10 +264,10 @@ void DecisionMaker::settingsVolumeAction(InputHandler::ButtonPress buttonPress)
         FileSystemManager->setDefaultVolume(AudioSettings->getVolume());
         break;
     case InputHandler::MiddleButtonPress:
-        changeToMenu();
+        changeToSettings();
         break;
     case InputHandler::MiddleButtonLongPress:
-        changeToMenu();
+        changeToSettings();
         break;
     case InputHandler::RightButtonPress:
         AudioSettings->volumeUp();
@@ -292,10 +289,10 @@ void DecisionMaker::settingsTimeoutAction(InputHandler::ButtonPress buttonPress)
         FileSystemManager->setTimeoutTime(DisplayHandler->getScreenTimeoutSeconds());
         break;
     case InputHandler::MiddleButtonPress:
-        changeToMenu();
+        changeToSettings();
         break;
     case InputHandler::MiddleButtonLongPress:
-        changeToMenu();
+        changeToSettings();
         break;
     case InputHandler::RightButtonPress:
         DisplayHandler->incrementTimeout();
@@ -396,6 +393,12 @@ void DecisionMaker::shiftSettingsSelectorDown()
     {
         SettingsSelectorPosition++;
     }
+}
+
+void DecisionMaker::changeToSettings()
+{
+    DeviceState = settings;
+    DisplayHandler->drawSettingsScreen(SettingsSelectorPosition);
 }
 
 
