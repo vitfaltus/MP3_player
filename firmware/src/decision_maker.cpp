@@ -133,9 +133,6 @@ void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
     case InputHandler::LeftButtonPress: // cycles menu selector up
         shiftMenuSelectorUp();
         break;
-    case InputHandler::LeftButtonLongPress: // nothing
-
-        break;
     case InputHandler::MiddleButtonPress: // selects menu element on the selector
         switch (MenuSelectorPosition) {
             case 0: // song selection
@@ -165,9 +162,6 @@ void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
     case InputHandler::RightButtonPress: // cycles menu selector down
         shiftMenuSelectorDown();
         break;
-    case InputHandler::RightButtonLongPress: // nothing
-
-        break;
     default:
         break;
     }
@@ -180,9 +174,6 @@ void DecisionMaker::songSelectAction(InputHandler::ButtonPress buttonPress)
     case InputHandler::LeftButtonPress:  // cycle up
         shiftSongSelectorUp();
         fetchAndDisplaySongs();
-
-        break;
-    case InputHandler::LeftButtonLongPress:
 
         break;
     case InputHandler::MiddleButtonPress: // select song
@@ -204,9 +195,6 @@ void DecisionMaker::songSelectAction(InputHandler::ButtonPress buttonPress)
         shiftSongSelectorDown();
         fetchAndDisplaySongs();
         break;
-    case InputHandler::RightButtonLongPress:
-
-        break;
     default:
         break;
     }
@@ -219,9 +207,6 @@ void DecisionMaker::settingsAction(InputHandler::ButtonPress buttonPress)
     case InputHandler::LeftButtonPress:
         shiftSettingsSelectorUp();
         DisplayHandler->drawSettingsScreen(SettingsSelectorPosition);
-
-        break;
-    case InputHandler::LeftButtonLongPress:
 
         break;
     case InputHandler::MiddleButtonPress:
@@ -245,9 +230,6 @@ void DecisionMaker::settingsAction(InputHandler::ButtonPress buttonPress)
     case InputHandler::RightButtonPress:
         shiftSettingsSelectorDown();
         DisplayHandler->drawSettingsScreen(SettingsSelectorPosition);
-        break;
-    case InputHandler::RightButtonLongPress:
-
         break;
     default:
         break;
