@@ -2,58 +2,53 @@
 #include "AudioOutputI2S.h"
 #include "pin_config.hpp"
 
-AudioSettings::AudioSettings()
+C_AudioSettings::C_AudioSettings()
 {
     Amp = new AudioOutputI2S();
     Amp->SetPinout(PinConfig::I2S_BCLK, PinConfig::I2S_LRC,
                    PinConfig::I2S_DOUT);
-    Amp->SetGain(realVolumeLevel); // volume (0.0–1.0)
-    VirtualVolumeLevel = realVolumeLevel;
+    Amp->SetGain(VolumeLevel); // volume (0.0–1.0)
 }
 
-AudioSettings::~AudioSettings() { delete Amp; }
+C_AudioSettings::~C_AudioSettings() { delete Amp; }
 
-float AudioSettings::volumeUp()
+float C_AudioSettings::volumeUp()
 {
-    if (realVolumeLevel < 1.0)
+    if (VolumeLevel < 1.0)
     {
-        realVolumeLevel += VolumeDiff;
-        Amp->SetGain(realVolumeLevel);
+        VolumeLevel += VolumeDiff;
+        Amp->SetGain(VolumeLevel);
     }
-    VirtualVolumeLevel = realVolumeLevel;
-    return realVolumeLevel;
+    return VolumeLevel;
 }
 
-void AudioSettings::setVolume(const float level)
+void C_AudioSettings::setVolume(const float level)
 {
-    realVolumeLevel = level;
-    Amp->SetGain(realVolumeLevel);
-    VirtualVolumeLevel = realVolumeLevel;
+    VolumeLevel = level;
+    Amp->SetGain(VolumeLevel);
 }
 
-float AudioSettings::volumeDown()
+float C_AudioSettings::volumeDown()
 {
-    if (realVolumeLevel > 0.02)
+    if (VolumeLevel > 0.02)
     {
-        realVolumeLevel -= VolumeDiff;
-        Amp->SetGain(realVolumeLevel);
+        VolumeLevel -= VolumeDiff;
+        Amp->SetGain(VolumeLevel);
     }
-    VirtualVolumeLevel = realVolumeLevel;
-    return realVolumeLevel;
+    return VolumeLevel;
 }
 
-void AudioSettings::shutAudio()
+void C_AudioSettings::shutAudio() const
 {
-    realVolumeLevel = 0;
-    Amp->SetGain(realVolumeLevel);
+    Amp->SetGain(0);
 }
 
-void AudioSettings::restoreAudio()
+void C_AudioSettings::restoreAudio() const
 {
-    realVolumeLevel = VirtualVolumeLevel;
-    Amp->SetGain(realVolumeLevel);
+    Amp->SetGain(VolumeLevel);
+
 }
 
-float AudioSettings::getVolume() const { return realVolumeLevel; }
+float C_AudioSettings::getVolume() const { return VolumeLevel; }
 
-AudioOutputI2S* AudioSettings::getAudioOutput() const { return Amp; }
+AudioOutputI2S* C_AudioSettings::getAudioOutput() const { return Amp; }

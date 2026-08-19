@@ -4,17 +4,16 @@
 #include "AudioOutputI2S.h"
 
 
-class AudioSettings
+class C_AudioSettings
 {
     AudioOutputI2S* Amp;
-    float realVolumeLevel = 0.3;
-    float VirtualVolumeLevel;
+    float VolumeLevel = 0.3;
 
     const float VolumeDiff = 0.05;
 
 public:
-    AudioSettings();
-    ~AudioSettings();
+    C_AudioSettings();
+    ~C_AudioSettings();
 
     float volumeUp();
 
@@ -22,9 +21,9 @@ public:
 
     float volumeDown();
 
-    void shutAudio();
+    void shutAudio() const;
 
-    void restoreAudio();
+    void restoreAudio() const;
 
     [[nodiscard]] float getVolume() const;
 

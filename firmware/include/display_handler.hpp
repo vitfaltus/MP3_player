@@ -6,7 +6,10 @@
 
 #include "input_handler.hpp"
 
-class DisplayHandler
+#define MAX_TIMEOUT_SECONDS 60
+#define MIN_TIMEOUT_SECONDS 5
+
+class C_DisplayHandler
 {
     Adafruit_SSD1306 Display;
 
@@ -17,7 +20,7 @@ class DisplayHandler
 
 
     unsigned long LastMillis= 0;
-    int ReadIntervalMillis = 20000;
+    int DimmingTimerMs = 20000;
     bool ScreenDimmed = false;
 
     void drawOnBoot();
@@ -25,8 +28,8 @@ class DisplayHandler
     void dimScreen(bool cond);
 
 public:
-    DisplayHandler();
-    ~DisplayHandler();
+    C_DisplayHandler();
+    ~C_DisplayHandler();
 
     void changeSongName(const char* song_path);
     void changeBatteryVoltage(float battery_voltage);
@@ -41,8 +44,27 @@ public:
                           float volume_level);
 
 
-    int getScreenTimeoutSeconds() const;
+    void drawMenuScreen(uint8_t selector_positon);
+
+    void drawDebugScreen(multi_heap_info_t& info);
+
+    void drawSongSelectScreen(const std::array<char*, 3>& DisplaySongArr, uint8_t selector_positon);
+
+    void drawSettingsScreen(uint8_t selector_positon);
+
+    void drawSettingsDefaultVolume(float volume_level);
+
+    void drawSettingsTimeOut(int timeout);
+
+
+    [[nodiscard]] int getScreenTimeoutSeconds() const;
     void setScreenTimeoutSeconds(int seconds);
+
+    void incrementTimeout();
+    void decrementTimeout();
+
+
+    void displayErrorMessage(const char* error_message, uint8_t delay_time);
 };
 
 #endif
