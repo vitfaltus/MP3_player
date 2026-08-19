@@ -67,8 +67,7 @@ bool FileSystemManager::setCurrentSongPath(const char* path) const {
   SD.remove(CURRENT_SONG_FILE);
 
   File SongFile = SD.open(CURRENT_SONG_FILE, FILE_WRITE);
-    Serial.print("Writing song: ");
-    Serial.println(path);
+
   const char* counter = path;
     while (*counter != '\0')
     {
@@ -78,4 +77,93 @@ bool FileSystemManager::setCurrentSongPath(const char* path) const {
 
   SongFile.close();
   return true;
+}
+
+float FileSystemManager::getDefaultVolume() const
+{
+    if (!FileSystemPresent && !setup() || !SD.exists(DEFAULT_VOLUME_FILE)) {
+        return 0.3f;
+    }
+
+    File f = SD.open(DEFAULT_VOLUME_FILE, FILE_READ);
+
+    constexpr uint8_t BufferSize = 5;
+
+    char buffer[BufferSize];
+
+    for (uint8_t i = 0; i < BufferSize-1; i++)
+    {
+        if (!f.available())
+        {
+            break;
+        }
+        buffer[i] = f.read();
+    }
+    buffer[BufferSize-1] = '\0';
+    const float result = atof(buffer);
+
+    f.close();
+    return result;
+}
+
+bool FileSystemManager::setDefaultVolume(float volume) const
+{
+
+    if (!FileSystemPresent && !setup()) {
+        return false;
+    }
+
+    SD.remove(DEFAULT_VOLUME_FILE);
+
+    File f = SD.open(DEFAULT_VOLUME_FILE, FILE_WRITE);
+
+    constexpr uint8_t BufferSize = 5;
+    char buffer[BufferSize];
+    // truncation doesnt matter since we want only two points of precision
+    if (snprintf(buffer, BufferSize, "%f", volume) < 0)
+    {
+        return false;
+    }
+
+    for (const char c : buffer)
+    {
+        f.write(c);
+    }
+
+    f.close();
+
+    return true;
+
+}
+
+uint8_t FileSystemManager::getTimeoutTimeSeconds() const
+{
+    if (!FileSystemPresent && !setup() || !SD.exists(TIMEOUT_TIME_FILE)) {
+        return 20;
+    }
+
+    File f = SD.open(TIMEOUT_TIME_FILE, FILE_READ);
+
+    const uint8_t result = f.read();
+
+    f.close();
+    return result;
+}
+
+bool FileSystemManager::setTimeoutTime(const uint8_t time_seconds) const
+{
+    if (!FileSystemPresent && !setup()) {
+        return false;
+    }
+
+    SD.remove(TIMEOUT_TIME_FILE);
+
+    File f = SD.open(TIMEOUT_TIME_FILE, FILE_WRITE);
+
+    f.write(time_seconds);
+
+    f.close();
+
+    return true;
+
 }
