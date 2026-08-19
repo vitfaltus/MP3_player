@@ -7,53 +7,48 @@ AudioSettings::AudioSettings()
     Amp = new AudioOutputI2S();
     Amp->SetPinout(PinConfig::I2S_BCLK, PinConfig::I2S_LRC,
                    PinConfig::I2S_DOUT);
-    Amp->SetGain(realVolumeLevel); // volume (0.0–1.0)
-    VirtualVolumeLevel = realVolumeLevel;
+    Amp->SetGain(VolumeLevel); // volume (0.0–1.0)
 }
 
 AudioSettings::~AudioSettings() { delete Amp; }
 
 float AudioSettings::volumeUp()
 {
-    if (realVolumeLevel < 1.0)
+    if (VolumeLevel < 1.0)
     {
-        realVolumeLevel += VolumeDiff;
-        Amp->SetGain(realVolumeLevel);
+        VolumeLevel += VolumeDiff;
+        Amp->SetGain(VolumeLevel);
     }
-    VirtualVolumeLevel = realVolumeLevel;
-    return realVolumeLevel;
+    return VolumeLevel;
 }
 
 void AudioSettings::setVolume(const float level)
 {
-    realVolumeLevel = level;
-    Amp->SetGain(realVolumeLevel);
-    VirtualVolumeLevel = realVolumeLevel;
+    VolumeLevel = level;
+    Amp->SetGain(VolumeLevel);
 }
 
 float AudioSettings::volumeDown()
 {
-    if (realVolumeLevel > 0.02)
+    if (VolumeLevel > 0.02)
     {
-        realVolumeLevel -= VolumeDiff;
-        Amp->SetGain(realVolumeLevel);
+        VolumeLevel -= VolumeDiff;
+        Amp->SetGain(VolumeLevel);
     }
-    VirtualVolumeLevel = realVolumeLevel;
-    return realVolumeLevel;
+    return VolumeLevel;
 }
 
-void AudioSettings::shutAudio()
+void AudioSettings::shutAudio() const
 {
-    realVolumeLevel = 0;
-    Amp->SetGain(realVolumeLevel);
+    Amp->SetGain(0);
 }
 
-void AudioSettings::restoreAudio()
+void AudioSettings::restoreAudio() const
 {
-    realVolumeLevel = VirtualVolumeLevel;
-    Amp->SetGain(realVolumeLevel);
+    Amp->SetGain(VolumeLevel);
+
 }
 
-float AudioSettings::getVolume() const { return realVolumeLevel; }
+float AudioSettings::getVolume() const { return VolumeLevel; }
 
 AudioOutputI2S* AudioSettings::getAudioOutput() const { return Amp; }
