@@ -18,10 +18,10 @@ class FileSystemManager {
 
 
     [[nodiscard]] float getDefaultVolume() const;
-    bool setDefaultVolume(float volume) const;
+    void setDefaultVolume(float volume) const;
 
     [[nodiscard]] uint8_t getTimeoutTimeSeconds() const;
-    bool setTimeoutTime(uint8_t time_seconds) const;
+    void setTimeoutTime(uint8_t time_seconds) const;
 
 
 

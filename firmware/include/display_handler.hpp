@@ -6,6 +6,9 @@
 
 #include "input_handler.hpp"
 
+#define MAX_TIMEOUT_SECONDS 60
+#define MIN_TIMEOUT_SECONDS 5
+
 class DisplayHandler
 {
     Adafruit_SSD1306 Display;
@@ -17,7 +20,7 @@ class DisplayHandler
 
 
     unsigned long LastMillis= 0;
-    int ReadIntervalMillis = 20000;
+    int DimmingTimerMs = 20000;
     bool ScreenDimmed = false;
 
     void drawOnBoot();
@@ -47,8 +50,18 @@ public:
 
     void drawSongSelectScreen(const std::array<char*, 3>& DisplaySongArr, uint8_t selector_positon);
 
-    int getScreenTimeoutSeconds() const;
+    void drawSettingsScreen(uint8_t selector_positon);
+
+    void drawSettingsDefaultVolume(float volume_level);
+
+    void drawSettingsTimeOut(int timeout);
+
+
+    [[nodiscard]] int getScreenTimeoutSeconds() const;
     void setScreenTimeoutSeconds(int seconds);
+
+    void incrementTimeout();
+    void decrementTimeout();
 
 
     void displayErrorMessage(const char* error_message, uint8_t delay_time);

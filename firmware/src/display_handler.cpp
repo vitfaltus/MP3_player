@@ -35,6 +35,7 @@ void DisplayHandler::changeBatteryVoltage(const float battery_voltage)
     BatteryVoltage = battery_voltage;
 
     Display.setTextWrap(false);
+    Display.setTextSize(1);
 
     Display.fillRect(109, 0, 128, 12, 0x0000);
     Display.setCursor(111, 3);
@@ -49,7 +50,7 @@ void DisplayHandler::changeVolumeLevel(const float volume_level)
 
     Display.fillRect(24, 1, 30, 12, 0x0000);
     Display.setCursor(25, 3);
-    Display.println(volume_level);
+    Display.println(VolumeLevel);
     Display.display();
 }
 void DisplayHandler::drawPause()
@@ -172,13 +173,88 @@ void DisplayHandler::drawSongSelectScreen(const std::array<char*, 3>& DisplaySon
     Display.display();
 }
 
+void DisplayHandler::drawSettingsScreen(uint8_t selector_positon)
+{
+    Display.clearDisplay();
+    Display.setTextSize(1);
+
+    Display.setTextWrap(false);
+
+    Display.setCursor(4, 18);
+    Display.println("Default volume");
+
+    Display.setCursor(4, 33);
+    Display.println("Timeout time");
+
+    Display.drawRoundRect(2, 16 + selector_positon*15, 126, 12, 3, SSD1306_WHITE);
+
+    Display.display();
+}
+
+void DisplayHandler::drawSettingsDefaultVolume(float volume_level)
+{
+    Display.fillScreen(0x0);
+
+    Display.setTextColor(SSD1306_WHITE);
+    Display.setTextSize(2);
+    Display.setTextWrap(false);
+    Display.setCursor(42, 22);
+    Display.println(volume_level);
+
+    Display.fillRect(10, 50, 18, 4, SSD1306_WHITE);
+
+    Display.fillRect(100, 50, 18, 4, SSD1306_WHITE);
+
+    Display.fillRect(107, 43, 4, 18, SSD1306_WHITE);
+
+    Display.display();
+}
+
+void DisplayHandler::drawSettingsTimeOut(int timeout)
+{
+    Display.fillScreen(0x0);
+
+    Display.setTextColor(SSD1306_WHITE);
+    Display.setTextSize(3);
+    Display.setTextWrap(false);
+    Display.setCursor(39, 21);
+    Display.println(timeout);
+
+    Display.setCursor(79, 20);
+    Display.println("s");
+
+    Display.fillRect(10, 50, 18, 4, SSD1306_WHITE);
+
+    Display.fillRect(100, 50, 18, 4, SSD1306_WHITE);
+
+    Display.fillRect(107, 43, 4, 18, SSD1306_WHITE);
+
+    Display.display();
+}
+
 int DisplayHandler::getScreenTimeoutSeconds() const
 {
-    return ReadIntervalMillis/1000;
+    return DimmingTimerMs/1000;
 }
 void DisplayHandler::setScreenTimeoutSeconds(const int seconds)
 {
-    ReadIntervalMillis = seconds*1000;
+    DimmingTimerMs = seconds*1000;
+}
+
+void DisplayHandler::incrementTimeout()
+{
+    if (DimmingTimerMs < MAX_TIMEOUT_SECONDS*1000)
+    {
+        DimmingTimerMs += 1000;
+    }
+}
+
+void DisplayHandler::decrementTimeout()
+{
+    if (DimmingTimerMs > MIN_TIMEOUT_SECONDS*1000)
+    {
+        DimmingTimerMs -= 1000;
+    }
 }
 
 void DisplayHandler::displayErrorMessage(const char* error_message, const uint8_t delay_time)
@@ -245,7 +321,7 @@ bool DisplayHandler::displayDimmingRoutine(
 
     }
     if (
-        now_millis - LastMillis > ReadIntervalMillis)
+        now_millis - LastMillis > DimmingTimerMs)
     {
         dimScreen(true);
         ScreenDimmed = true;

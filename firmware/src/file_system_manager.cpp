@@ -106,11 +106,11 @@ float FileSystemManager::getDefaultVolume() const
     return result;
 }
 
-bool FileSystemManager::setDefaultVolume(float volume) const
+void FileSystemManager::setDefaultVolume(float volume) const
 {
 
     if (!FileSystemPresent && !setup()) {
-        return false;
+        return;
     }
 
     SD.remove(DEFAULT_VOLUME_FILE);
@@ -122,7 +122,7 @@ bool FileSystemManager::setDefaultVolume(float volume) const
     // truncation doesnt matter since we want only two points of precision
     if (snprintf(buffer, BufferSize, "%f", volume) < 0)
     {
-        return false;
+        return;
     }
 
     for (const char c : buffer)
@@ -131,8 +131,6 @@ bool FileSystemManager::setDefaultVolume(float volume) const
     }
 
     f.close();
-
-    return true;
 
 }
 
@@ -150,10 +148,10 @@ uint8_t FileSystemManager::getTimeoutTimeSeconds() const
     return result;
 }
 
-bool FileSystemManager::setTimeoutTime(const uint8_t time_seconds) const
+void FileSystemManager::setTimeoutTime(const uint8_t time_seconds) const
 {
     if (!FileSystemPresent && !setup()) {
-        return false;
+        return;
     }
 
     SD.remove(TIMEOUT_TIME_FILE);
@@ -163,7 +161,5 @@ bool FileSystemManager::setTimeoutTime(const uint8_t time_seconds) const
     f.write(time_seconds);
 
     f.close();
-
-    return true;
 
 }

@@ -3,7 +3,7 @@
 
 DecisionMaker::DecisionMaker()
 {
-    deviceState = song_playing;
+    DeviceState = song_playing;
 
     display_handler = new DisplayHandler();
     file_system_manager = new FileSystemManager();
@@ -19,18 +19,23 @@ DecisionMaker::DecisionMaker()
 
     delete[] tmp;
 
+    audio_settings->setVolume(file_system_manager->getDefaultVolume());
+
+    display_handler->setScreenTimeoutSeconds(file_system_manager->getTimeoutTimeSeconds());
+
     display_handler->showSongScreen(song_player->getSongName(),
                                     BatteryManager::getBatteryVoltage(),
                                     audio_settings->getVolume());
 
     MenuSelectorPosition = 0;
     SongSelectSelectorPosition = 0;
+    SettingsSelectorPosition = 0;
 }
 
 // calls method of the current state of the machine, passes the buttonPress as a param
 void DecisionMaker::performedAction(InputHandler::ButtonPress buttonPress)
 {
-    switch (deviceState)
+    switch (DeviceState)
     {
     case song_playing:
         songPlayingAction(buttonPress);
@@ -43,6 +48,12 @@ void DecisionMaker::performedAction(InputHandler::ButtonPress buttonPress)
         break;
     case settings:
         settingsAction(buttonPress);
+        break;
+    case settings_volume:
+        settingsVolumeAction(buttonPress);
+        break;
+    case settings_timeout:
+        settingsTimeoutAction(buttonPress);
         break;
     case debug:
         debugAction(buttonPress);
@@ -128,16 +139,19 @@ void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
     case InputHandler::MiddleButtonPress: // selects menu element on the selector
         switch (MenuSelectorPosition) {
             case 0: // song selection
-                deviceState = song_select;
+                DeviceState = song_select;
 
                 SongSelectSelectorPosition = 0;
                 fetchAndDisplaySongs();
             break;
             case 1: // settings
-                deviceState = settings;
+                DeviceState = settings;
+
+                //changeToSettings();
+                display_handler->drawSettingsScreen(SettingsSelectorPosition);
             break;
             case 2: // debug
-                deviceState = debug;
+                DeviceState = debug;
                 multi_heap_info_t info;
                 display_handler->drawDebugScreen(info);
             break;
@@ -161,6 +175,7 @@ void DecisionMaker::menuAction(InputHandler::ButtonPress buttonPress)
         break;
     }
 }
+
 void DecisionMaker::songSelectAction(InputHandler::ButtonPress buttonPress)
 {
     switch (buttonPress)
@@ -205,22 +220,89 @@ void DecisionMaker::settingsAction(InputHandler::ButtonPress buttonPress)
     switch (buttonPress)
     {
     case InputHandler::LeftButtonPress:
+        shiftSettingsSelectorUp();
+        display_handler->drawSettingsScreen(SettingsSelectorPosition);
 
         break;
     case InputHandler::LeftButtonLongPress:
 
         break;
     case InputHandler::MiddleButtonPress:
-
+        switch (SettingsSelectorPosition)
+        {
+        case 0:
+            DeviceState = settings_volume;
+            display_handler->drawSettingsDefaultVolume(file_system_manager->getDefaultVolume());
+            //changeToSettingVolume();
+            break;
+        case 1:
+            DeviceState = settings_timeout;
+            display_handler->drawSettingsTimeOut(file_system_manager->getTimeoutTimeSeconds());
+            //changeToSettingTimeout();
+            break;
+        }
         break;
     case InputHandler::MiddleButtonLongPress:
+        changeToMenu();
+        break;
+    case InputHandler::RightButtonPress:
+        shiftSettingsSelectorDown();
+        display_handler->drawSettingsScreen(SettingsSelectorPosition);
+        break;
+    case InputHandler::RightButtonLongPress:
 
+        break;
+    default:
+        break;
+    }
+}
+
+void DecisionMaker::settingsVolumeAction(InputHandler::ButtonPress buttonPress)
+{
+    switch (buttonPress)
+    {
+    case InputHandler::LeftButtonPress:
+
+        break;
+    case InputHandler::LeftButtonLongPress:
+
+        break;
+    case InputHandler::MiddleButtonPress:
+        changeToMenu();
+        break;
+    case InputHandler::MiddleButtonLongPress:
+        changeToMenu();
         break;
     case InputHandler::RightButtonPress:
 
         break;
     case InputHandler::RightButtonLongPress:
 
+        break;
+    default:
+        break;
+    }
+}
+
+void DecisionMaker::settingsTimeoutAction(InputHandler::ButtonPress buttonPress)
+{
+    switch (buttonPress)
+    {
+    case InputHandler::LeftButtonPress:
+        display_handler->decrementTimeout();
+        display_handler->drawSettingsTimeOut(display_handler->getScreenTimeoutSeconds());
+        file_system_manager->setTimeoutTime(display_handler->getScreenTimeoutSeconds());
+        break;
+    case InputHandler::MiddleButtonPress:
+        changeToMenu();
+        break;
+    case InputHandler::MiddleButtonLongPress:
+        changeToMenu();
+        break;
+    case InputHandler::RightButtonPress:
+        display_handler->incrementTimeout();
+        display_handler->drawSettingsTimeOut(display_handler->getScreenTimeoutSeconds());
+        file_system_manager->setTimeoutTime(display_handler->getScreenTimeoutSeconds());
         break;
     default:
         break;
@@ -253,7 +335,7 @@ void DecisionMaker::shiftMenuSelectorDown()
 
 void DecisionMaker::changeToMenu()
 {
-    deviceState = menu;
+    DeviceState = menu;
     MenuSelectorPosition = 0;
     display_handler->drawMenuScreen(MenuSelectorPosition);
 }
@@ -293,12 +375,29 @@ void DecisionMaker::shiftSongSelectorDown()
 
 void DecisionMaker::changeToSongPlaying()
 {
-    deviceState = song_playing;
+    DeviceState = song_playing;
     display_handler->showSongScreen(song_player->getSongName(),
                                BatteryManager::getBatteryVoltage(),
                                audio_settings->getVolume());
     //reset the dimming timer
     display_handler->displayDimmingRoutine(InputHandler::ButtonPress::MiddleButtonPress);
+}
+
+void DecisionMaker::shiftSettingsSelectorUp()
+{
+    if (SettingsSelectorPosition > 0)
+    {
+        SettingsSelectorPosition--;
+    }
+
+}
+
+void DecisionMaker::shiftSettingsSelectorDown()
+{
+    if (SettingsSelectorPosition < 1)
+    {
+        SettingsSelectorPosition++;
+    }
 }
 
 
