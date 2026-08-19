@@ -2,7 +2,7 @@
 #include "AudioOutputI2S.h"
 #include "pin_config.hpp"
 
-AudioSettings::AudioSettings()
+C_AudioSettings::C_AudioSettings()
 {
     Amp = new AudioOutputI2S();
     Amp->SetPinout(PinConfig::I2S_BCLK, PinConfig::I2S_LRC,
@@ -10,9 +10,9 @@ AudioSettings::AudioSettings()
     Amp->SetGain(VolumeLevel); // volume (0.0–1.0)
 }
 
-AudioSettings::~AudioSettings() { delete Amp; }
+C_AudioSettings::~C_AudioSettings() { delete Amp; }
 
-float AudioSettings::volumeUp()
+float C_AudioSettings::volumeUp()
 {
     if (VolumeLevel < 1.0)
     {
@@ -22,13 +22,13 @@ float AudioSettings::volumeUp()
     return VolumeLevel;
 }
 
-void AudioSettings::setVolume(const float level)
+void C_AudioSettings::setVolume(const float level)
 {
     VolumeLevel = level;
     Amp->SetGain(VolumeLevel);
 }
 
-float AudioSettings::volumeDown()
+float C_AudioSettings::volumeDown()
 {
     if (VolumeLevel > 0.02)
     {
@@ -38,17 +38,17 @@ float AudioSettings::volumeDown()
     return VolumeLevel;
 }
 
-void AudioSettings::shutAudio() const
+void C_AudioSettings::shutAudio() const
 {
     Amp->SetGain(0);
 }
 
-void AudioSettings::restoreAudio() const
+void C_AudioSettings::restoreAudio() const
 {
     Amp->SetGain(VolumeLevel);
 
 }
 
-float AudioSettings::getVolume() const { return VolumeLevel; }
+float C_AudioSettings::getVolume() const { return VolumeLevel; }
 
-AudioOutputI2S* AudioSettings::getAudioOutput() const { return Amp; }
+AudioOutputI2S* C_AudioSettings::getAudioOutput() const { return Amp; }

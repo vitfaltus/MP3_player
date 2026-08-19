@@ -5,13 +5,13 @@
 #include <cstdint>
 
 
-class FileSystemManager {
+class C_FileSystemManager {
   bool FileSystemPresent = false;
 
   static bool setup();
 
   public:
-  FileSystemManager();
+  C_FileSystemManager();
 
   bool getCurrentSongPath(char** path) const;
   bool setCurrentSongPath(const char* path) const;

@@ -4,7 +4,7 @@
 #include "AudioOutputI2S.h"
 
 
-class AudioSettings
+class C_AudioSettings
 {
     AudioOutputI2S* Amp;
     float VolumeLevel = 0.3;
@@ -12,8 +12,8 @@ class AudioSettings
     const float VolumeDiff = 0.05;
 
 public:
-    AudioSettings();
-    ~AudioSettings();
+    C_AudioSettings();
+    ~C_AudioSettings();
 
     float volumeUp();
 

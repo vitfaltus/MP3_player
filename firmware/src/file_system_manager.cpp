@@ -7,7 +7,7 @@
 
 
 
-bool FileSystemManager::setup() {
+bool C_FileSystemManager::setup() {
   SPI.begin(PinConfig::SD_SCK, PinConfig::SD_MISO, PinConfig::SD_MOSI);
   for (int i = 0; i < 5; i++) {
     if (!SD.begin(PinConfig::SD_CS)) {
@@ -19,7 +19,7 @@ bool FileSystemManager::setup() {
   return false; // SD card not mounted
 }
 
-FileSystemManager::FileSystemManager() {
+C_FileSystemManager::C_FileSystemManager() {
   if (!setup()) {
    return;
   }
@@ -29,7 +29,7 @@ FileSystemManager::FileSystemManager() {
 
 
 // when returns true -> memory has been allocated
-bool FileSystemManager::getCurrentSongPath(char** path) const {
+bool C_FileSystemManager::getCurrentSongPath(char** path) const {
   if (!FileSystemPresent && !setup()) {
     return false;
   }
@@ -59,7 +59,7 @@ bool FileSystemManager::getCurrentSongPath(char** path) const {
   return true;
 
 }
-bool FileSystemManager::setCurrentSongPath(const char* path) const {
+bool C_FileSystemManager::setCurrentSongPath(const char* path) const {
   if (!FileSystemPresent && !setup()) {
     return false;
   }
@@ -79,7 +79,7 @@ bool FileSystemManager::setCurrentSongPath(const char* path) const {
   return true;
 }
 
-float FileSystemManager::getDefaultVolume() const
+float C_FileSystemManager::getDefaultVolume() const
 {
     if (!FileSystemPresent && !setup() || !SD.exists(DEFAULT_VOLUME_FILE)) {
         return 0.3f;
@@ -106,7 +106,7 @@ float FileSystemManager::getDefaultVolume() const
     return result;
 }
 
-void FileSystemManager::setDefaultVolume(float volume) const
+void C_FileSystemManager::setDefaultVolume(float volume) const
 {
 
     if (!FileSystemPresent && !setup()) {
@@ -134,7 +134,7 @@ void FileSystemManager::setDefaultVolume(float volume) const
 
 }
 
-uint8_t FileSystemManager::getTimeoutTimeSeconds() const
+uint8_t C_FileSystemManager::getTimeoutTimeSeconds() const
 {
     if (!FileSystemPresent && !setup() || !SD.exists(TIMEOUT_TIME_FILE)) {
         return 20;
@@ -148,7 +148,7 @@ uint8_t FileSystemManager::getTimeoutTimeSeconds() const
     return result;
 }
 
-void FileSystemManager::setTimeoutTime(const uint8_t time_seconds) const
+void C_FileSystemManager::setTimeoutTime(const uint8_t time_seconds) const
 {
     if (!FileSystemPresent && !setup()) {
         return;

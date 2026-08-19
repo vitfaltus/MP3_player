@@ -5,7 +5,7 @@
 #include "display_handler.hpp"
 #include "file_system_manager.hpp"
 #include "input_handler.hpp"
-#include "SongPlayer.hpp"
+#include "song_player.hpp"
 enum E_DeviceState
 {
     song_playing,
@@ -21,11 +21,11 @@ class DecisionMaker
 {
     E_DeviceState DeviceState;
 
-    // device subsystems TODO refactor with PascalCase
-    DisplayHandler* display_handler;
-    FileSystemManager* file_system_manager;
-    AudioSettings* audio_settings;
-    SongPlayer* song_player;
+    // device subsystems
+    C_DisplayHandler* DisplayHandler;
+    C_FileSystemManager* FileSystemManager;
+    C_AudioSettings* AudioSettings;
+    C_SongPlayer* SongPlayer;
 
     // menu selector
     uint8_t MenuSelectorPosition;
@@ -76,7 +76,7 @@ class DecisionMaker
 
     void performedAction(InputHandler::ButtonPress buttonPress);
 
-    DisplayHandler* getDisplayHandler() const;
+    C_DisplayHandler* getDisplayHandler() const;
 };
 
 #endif // FIRMWARE_DECISION_MAKER_HPP

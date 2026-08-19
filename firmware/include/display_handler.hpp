@@ -9,7 +9,7 @@
 #define MAX_TIMEOUT_SECONDS 60
 #define MIN_TIMEOUT_SECONDS 5
 
-class DisplayHandler
+class C_DisplayHandler
 {
     Adafruit_SSD1306 Display;
 
@@ -28,8 +28,8 @@ class DisplayHandler
     void dimScreen(bool cond);
 
 public:
-    DisplayHandler();
-    ~DisplayHandler();
+    C_DisplayHandler();
+    ~C_DisplayHandler();
 
     void changeSongName(const char* song_path);
     void changeBatteryVoltage(float battery_voltage);
