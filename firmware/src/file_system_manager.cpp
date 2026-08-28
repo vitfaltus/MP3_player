@@ -10,8 +10,9 @@
 bool C_FileSystemManager::setup() {
   SPI.begin(PinConfig::SD_SCK, PinConfig::SD_MISO, PinConfig::SD_MOSI);
   for (int i = 0; i < 5; i++) {
-    if (!SD.begin(PinConfig::SD_CS)) {
-      delay(1000);
+    if (!SD.begin(PinConfig::SD_CS, SPI, 4000000)) {
+        Serial.println("SDC mounting failed");
+        delay(1000);
     } else {
       return true; // SD card mounted
     }
@@ -61,7 +62,7 @@ bool C_FileSystemManager::getCurrentSongPath(char** path) const {
 }
 void C_FileSystemManager::setCurrentSongPath(const char* path) const {
   if (!FileSystemPresent && !setup()) {
-    return false;
+    return;
   }
 
   SD.remove(CURRENT_SONG_FILE);
@@ -76,7 +77,6 @@ void C_FileSystemManager::setCurrentSongPath(const char* path) const {
     }
 
   SongFile.close();
-  return true;
 }
 
 float C_FileSystemManager::getDefaultVolume() const
