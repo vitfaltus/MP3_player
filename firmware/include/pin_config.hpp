@@ -9,8 +9,8 @@ namespace PinConfig
 
     constexpr int SD_CS = D7;
     constexpr int SD_SCK = D8;
-    constexpr int SD_MISO = D10;
-    constexpr int SD_MOSI = D9;
+    constexpr int SD_MISO = D9;
+    constexpr int SD_MOSI = D10;
 
     constexpr int I2S_BCLK = D2;
     constexpr int I2S_LRC = D6;

@@ -8,9 +8,10 @@
 
 
 bool C_FileSystemManager::setup() {
-  SPI.begin(PinConfig::SD_SCK, PinConfig::SD_MISO, PinConfig::SD_MOSI);
+    delay(1000);
+  SPI.begin(PinConfig::SD_SCK, PinConfig::SD_MISO, PinConfig::SD_MOSI, PinConfig::SD_CS);
   for (int i = 0; i < 5; i++) {
-    if (!SD.begin(PinConfig::SD_CS, SPI, 4000000)) {
+    if (!SD.begin(PinConfig::SD_CS, SPI, 1000000)) {
         Serial.println("SDC mounting failed");
         delay(1000);
     } else {

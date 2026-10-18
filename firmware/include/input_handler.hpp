@@ -21,11 +21,11 @@ public:
     ButtonPress checkButtons();
 
 private:
-    const int NoPressValue = 940;
+    const int NoPressValue = 3642;
 
-    const int LeftAnalogValue = 1790;
-    const int MiddleAnalogValue = 1200;
-    const int RightAnalogValue = 1050;
+    const int LeftAnalogValue = 2720;
+    const int MiddleAnalogValue = 3340;
+    const int RightAnalogValue = 3510;
 
     const int LongPressThreshold = 600;
     const int ShortPressThreshold = 100;
