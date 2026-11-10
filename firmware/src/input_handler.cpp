@@ -1,17 +1,23 @@
 #include "input_handler.hpp"
 #include <Arduino.h>
-#include "pin_config.hpp"
 
-bool InputHandler::aroundValue(const int reference_value,const int compared_value) const
+#include "config.hpp"
+
+InputHandler::InputHandler(const uint16_t NoPressValue, const uint16_t LeftAnalogValue,
+        const uint16_t MiddleAnalogValue, const uint16_t RightAnalogValue,
+        const uint16_t ShortPressThreshold, const uint16_t LongPressThreshold)
 {
-    if (std::abs(reference_value - compared_value) < AnalogReadErrorMargin)
-    {
-        return true;
-    }
-    return false;
-}
 
-InputHandler::InputHandler() { pinMode(PinConfig::BUTTON_PANEL, INPUT); }
+    this->NoPressValue = NoPressValue;
+    this->LeftAnalogValue = LeftAnalogValue;
+    this->MiddleAnalogValue = MiddleAnalogValue;
+    this->RightAnalogValue = RightAnalogValue;
+
+    this->ShortPressThreshold = ShortPressThreshold;
+    this->LongPressThreshold = LongPressThreshold;
+
+    pinMode(config::PinConfig::BUTTON_PANEL, INPUT);
+}
 
 InputHandler::ButtonPress InputHandler::checkButtons()
 {
@@ -54,6 +60,15 @@ InputHandler::ButtonPress InputHandler::checkButtons()
     return None;
 }
 
+bool InputHandler::aroundValue(const uint16_t reference_value, const uint16_t compared_value)
+{
+    if (std::abs(reference_value - compared_value) < AnalogReadErrorMargin)
+    {
+        return true;
+    }
+    return false;
+}
+
 InputHandler::ButtonPress InputHandler::handleLeftRelease()
 {
 
@@ -93,7 +108,7 @@ void InputHandler::getButtonPanelValue()
 {
     ButtonPanelValue = 0;
 
-    for (int i = 0; i < SamplesPerRead; i++)
+    for (uint16_t i = 0; i < SamplesPerRead; i++)
     {
         ButtonPanelValue += analogRead(PinConfig::BUTTON_PANEL);
     }

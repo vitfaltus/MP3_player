@@ -5,13 +5,14 @@
 #include <SD.h>
 #include <SPI.h>
 
+#include "config.hpp"
 
 
 bool C_FileSystemManager::setup() {
     delay(1000);
-  SPI.begin(PinConfig::SD_SCK, PinConfig::SD_MISO, PinConfig::SD_MOSI, PinConfig::SD_CS);
+  SPI.begin(config::PinConfig::SD_SCK, config::PinConfig::SD_MISO, config::PinConfig::SD_MOSI, config::PinConfig::SD_CS);
   for (int i = 0; i < 5; i++) {
-    if (!SD.begin(PinConfig::SD_CS, SPI, 1000000)) {
+    if (!SD.begin(config::PinConfig::SD_CS, SPI, 1000000)) {
         Serial.println("SDC mounting failed");
         delay(1000);
     } else {

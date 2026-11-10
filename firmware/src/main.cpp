@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "audio_settings.hpp"
 #include "battery_manager.hpp"
+#include "config.hpp"
 #include "decision_maker.hpp"
 #include "display_handler.hpp"
 #include "file_system_manager.hpp"
@@ -31,9 +32,6 @@ void batteryRoutine()
 }
 
 
-
-
-
 void setup()
 {
     Serial.begin(9600);
@@ -42,7 +40,9 @@ void setup()
 
     battery_manager = new BatteryManager();
 
-    input_handler = new InputHandler();
+    input_handler = new InputHandler(config::InputHandler::NoPressValue, config::InputHandler::LeftAnalogValue,
+        config::InputHandler::MiddleAnalogValue, config::InputHandler::RightAnalogValue,
+        config::InputHandler::ShortPressThreshold, config::InputHandler::LongPressThreshold);
 
 }
 

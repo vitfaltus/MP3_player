@@ -1,11 +1,18 @@
 #ifndef FIRMWARE_INCLUDE_INPUT_HANDLER_HPP
 #define FIRMWARE_INCLUDE_INPUT_HANDLER_HPP
+#include <cstdint>
+
+
+
+
 
 class InputHandler
 {
 
 public:
-    InputHandler();
+    InputHandler(uint16_t NoPressValue, uint16_t LeftAnalogValue,
+        uint16_t MiddleAnalogValue, uint16_t RightAnalogValue,
+        uint16_t ShortPressThreshold, uint16_t LongPressThreshold);
 
     enum ButtonPress
     {
@@ -21,26 +28,26 @@ public:
     ButtonPress checkButtons();
 
 private:
-    const int NoPressValue = 3642;
+    uint16_t NoPressValue = 0;
 
-    const int LeftAnalogValue = 2720;
-    const int MiddleAnalogValue = 3340;
-    const int RightAnalogValue = 3510;
+    uint16_t LeftAnalogValue = 0;
+    uint16_t MiddleAnalogValue = 0;
+    uint16_t RightAnalogValue = 0;
 
-    const int LongPressThreshold = 600;
-    const int ShortPressThreshold = 100;
+    uint16_t LongPressThreshold = 0;
+    uint16_t ShortPressThreshold = 0;
 
-    int LeftDebounceTimer = 0;
-    int MiddleDebounceTimer = 0;
-    int RightDebounceTimer = 0;
+    uint32_t LeftDebounceTimer = 0;
+    uint32_t MiddleDebounceTimer = 0;
+    uint32_t RightDebounceTimer = 0;
 
-    const int SamplesPerRead = 8;
-    int ButtonPanelValue = 0;
+    static constexpr uint16_t SamplesPerRead = 8;
+    uint16_t ButtonPanelValue = 0;
 
-    const int AnalogReadErrorMargin = 45;
+    static constexpr uint16_t AnalogReadErrorMargin = 45;
 
-    [[nodiscard]] bool aroundValue(int reference_value,
-                                    int compared_value) const;
+    [[nodiscard]] static bool aroundValue(uint16_t reference_value,
+                                          uint16_t compared_value);
 
     void getButtonPanelValue();
 
