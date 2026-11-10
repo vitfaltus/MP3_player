@@ -1,12 +1,12 @@
 #include "audio_settings.hpp"
 #include "AudioOutputI2S.h"
-#include "pin_config.hpp"
+#include "config.hpp"
 
 C_AudioSettings::C_AudioSettings()
 {
     Amp = new AudioOutputI2S();
-    Amp->SetPinout(PinConfig::I2S_BCLK, PinConfig::I2S_LRC,
-                   PinConfig::I2S_DOUT);
+    Amp->SetPinout(config::PinConfig::I2S_BCLK, config::PinConfig::I2S_LRC,
+                   config::PinConfig::I2S_DOUT);
     Amp->SetGain(VolumeLevel); // volume (0.0–1.0)
 }
 

@@ -1,7 +1,5 @@
 #include "file_system_manager.hpp"
 
-#include "pin_config.hpp"
-
 #include <SD.h>
 #include <SPI.h>
 

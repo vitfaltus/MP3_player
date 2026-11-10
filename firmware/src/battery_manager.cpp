@@ -1,7 +1,5 @@
 #include "battery_manager.hpp"
 
-#include "pin_config.hpp"
-
 #include <Arduino.h>
 
 #include "config.hpp"
