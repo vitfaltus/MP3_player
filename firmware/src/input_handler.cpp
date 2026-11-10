@@ -110,7 +110,7 @@ void InputHandler::getButtonPanelValue()
 
     for (uint16_t i = 0; i < SamplesPerRead; i++)
     {
-        ButtonPanelValue += analogRead(PinConfig::BUTTON_PANEL);
+        ButtonPanelValue += analogRead(config::PinConfig::BUTTON_PANEL);
     }
     ButtonPanelValue /= SamplesPerRead;
 }

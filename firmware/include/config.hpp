@@ -5,7 +5,7 @@
 
 namespace config
 {
-    namespace InputHandler
+    namespace ButtonInputVals
     {
         constexpr uint16_t NoPressValue = 975;
 
@@ -32,6 +32,14 @@ namespace config
         constexpr int BATTERY_READ = D0;
 
         constexpr int BUTTON_PANEL = D1;
+    }
+    namespace FileSysPaths
+    {
+        constexpr char CurrentSongFile[] = "/.current_song_path";
+        constexpr char DefaultVolumeFile[] = "/.default_volume_path";
+        constexpr char TimeOutFile[] = "/.timeout_time";
+
+
     }
 
 }

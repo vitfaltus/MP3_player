@@ -34,12 +34,12 @@ bool C_FileSystemManager::getCurrentSongPath(char** path) const {
   if (!FileSystemPresent && !setup()) {
     return false;
   }
-    if (!SD.exists(CURRENT_SONG_FILE))
+    if (!SD.exists(config::FileSysPaths::CurrentSongFile))
     {
         return false;
     }
 
-  File SongFile = SD.open(CURRENT_SONG_FILE, FILE_READ);
+  File SongFile = SD.open(config::FileSysPaths::CurrentSongFile, FILE_READ);
 
     const size_t file_size = SongFile.size();
     if (file_size == 0)
@@ -65,9 +65,9 @@ void C_FileSystemManager::setCurrentSongPath(const char* path) const {
     return;
   }
 
-  SD.remove(CURRENT_SONG_FILE);
+  SD.remove(config::FileSysPaths::CurrentSongFile);
 
-  File SongFile = SD.open(CURRENT_SONG_FILE, FILE_WRITE);
+  File SongFile = SD.open(config::FileSysPaths::CurrentSongFile, FILE_WRITE);
 
   const char* counter = path;
     while (*counter != '\0')
@@ -81,11 +81,11 @@ void C_FileSystemManager::setCurrentSongPath(const char* path) const {
 
 float C_FileSystemManager::getDefaultVolume() const
 {
-    if (!FileSystemPresent && !setup() || !SD.exists(DEFAULT_VOLUME_FILE)) {
+    if (!FileSystemPresent && !setup() || !SD.exists(config::FileSysPaths::DefaultVolumeFile)) {
         return 0.3f;
     }
 
-    File f = SD.open(DEFAULT_VOLUME_FILE, FILE_READ);
+    File f = SD.open(config::FileSysPaths::DefaultVolumeFile, FILE_READ);
 
     constexpr uint8_t BufferSize = 5;
 
@@ -113,9 +113,9 @@ void C_FileSystemManager::setDefaultVolume(float volume) const
         return;
     }
 
-    SD.remove(DEFAULT_VOLUME_FILE);
+    SD.remove(config::FileSysPaths::DefaultVolumeFile);
 
-    File f = SD.open(DEFAULT_VOLUME_FILE, FILE_WRITE);
+    File f = SD.open(config::FileSysPaths::DefaultVolumeFile, FILE_WRITE);
 
     constexpr uint8_t BufferSize = 5;
     char buffer[BufferSize];
@@ -136,11 +136,11 @@ void C_FileSystemManager::setDefaultVolume(float volume) const
 
 uint8_t C_FileSystemManager::getTimeoutTimeSeconds() const
 {
-    if (!FileSystemPresent && !setup() || !SD.exists(TIMEOUT_TIME_FILE)) {
+    if (!FileSystemPresent && !setup() || !SD.exists(config::FileSysPaths::TimeOutFile)) {
         return 20;
     }
 
-    File f = SD.open(TIMEOUT_TIME_FILE, FILE_READ);
+    File f = SD.open(config::FileSysPaths::TimeOutFile, FILE_READ);
 
     const uint8_t result = f.read();
 
@@ -154,9 +154,9 @@ void C_FileSystemManager::setTimeoutTime(const uint8_t time_seconds) const
         return;
     }
 
-    SD.remove(TIMEOUT_TIME_FILE);
+    SD.remove(config::FileSysPaths::TimeOutFile);
 
-    File f = SD.open(TIMEOUT_TIME_FILE, FILE_WRITE);
+    File f = SD.open(config::FileSysPaths::TimeOutFile, FILE_WRITE);
 
     f.write(time_seconds);
 

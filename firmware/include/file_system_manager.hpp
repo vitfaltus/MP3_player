@@ -1,7 +1,4 @@
 #pragma once
-#define CURRENT_SONG_FILE "/.current_song_path"
-#define DEFAULT_VOLUME_FILE "/.default_volume"
-#define TIMEOUT_TIME_FILE "/.timeout_time"
 #include <cstdint>
 
 

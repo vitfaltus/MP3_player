@@ -2,10 +2,6 @@
 #define FIRMWARE_INCLUDE_INPUT_HANDLER_HPP
 #include <cstdint>
 
-
-
-
-
 class InputHandler
 {
 

@@ -6,7 +6,6 @@
 #include "display_handler.hpp"
 #include "file_system_manager.hpp"
 #include "input_handler.hpp"
-#include "pin_config.hpp"
 #include "song_player.hpp"
 
 
@@ -40,9 +39,9 @@ void setup()
 
     battery_manager = new BatteryManager();
 
-    input_handler = new InputHandler(config::InputHandler::NoPressValue, config::InputHandler::LeftAnalogValue,
-        config::InputHandler::MiddleAnalogValue, config::InputHandler::RightAnalogValue,
-        config::InputHandler::ShortPressThreshold, config::InputHandler::LongPressThreshold);
+    input_handler = new InputHandler(config::ButtonInputVals::NoPressValue, config::ButtonInputVals::LeftAnalogValue,
+        config::ButtonInputVals::MiddleAnalogValue, config::ButtonInputVals::RightAnalogValue,
+        config::ButtonInputVals::ShortPressThreshold, config::ButtonInputVals::LongPressThreshold);
 
 }
 
