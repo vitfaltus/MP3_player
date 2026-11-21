@@ -163,3 +163,8 @@ void C_FileSystemManager::setTimeoutTime(const uint8_t time_seconds) const
     f.close();
 
 }
+
+bool C_FileSystemManager::isFsPresent() const
+{
+    return FileSystemPresent;
+}

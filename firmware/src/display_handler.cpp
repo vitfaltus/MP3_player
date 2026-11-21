@@ -3,95 +3,142 @@
 #include <Wire.h>
 #include <string>
 
+#include "fonts/Org_01.h"
+
 C_DisplayHandler::C_DisplayHandler()
 {
-    this->Display = Adafruit_SSD1306(Width, Height, &Wire, -1);
+    this->display = Adafruit_SSD1306(Width, Height, &Wire, -1);
 
-    if (!Display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
+    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
     { // Address 0x3D for 128x64
         Serial.println(F("SSD1306 allocation failed"));
     }
     delay(15);
+    display.setFont(&Org_01);
     drawOnBoot();
-    Display.setTextSize(1);
-    Display.clearDisplay();
 }
 C_DisplayHandler::~C_DisplayHandler()
 {
         delete SongName;
 }
+
+void C_DisplayHandler::initTopBanner(const float volt, const float vol, const bool sd)
+{
+    topBanner.voltage = volt;
+    topBanner.volume = static_cast<uint8_t>(100*vol);
+    topBanner.sdPresent = sd;
+
+    drawTopBanner();
+}
+
+void C_DisplayHandler::drawTopBanner()
+{
+    changeBatteryVoltage(topBanner.voltage);
+    changeVolumeLevel(0.01f * topBanner.volume);
+
+    display.setCursor(117, 11);
+    display.print("V");
+
+    display.setCursor(2, 11);
+    display.print("VOL:");
+    display.drawBitmap(39, 6, image_Volup_bits, 8, 6, 1);
+
+    if (topBanner.sdPresent)
+        display.drawBitmap(56, 1, image_micro_sd_bits, 16, 14, 1);
+
+    display.drawLine(0, 15, 127, 15, 1);
+
+    display.display();
+}
+
 void C_DisplayHandler::changeSongName(const char* song_path)
 {
     SongName = parseName(song_path);
 
-    Display.setTextWrap(true);
-    Display.fillRect(0, 26, 128, 38, 0x0000);
-    Display.setCursor(19, 35);
-    Display.println(SongName);
-    Display.display();
+    display.setTextWrap(false);
+    display.fillRect(0, 19, 122, 19, 0x0000);
+    display.setTextColor(1);
+    display.setTextSize(2);
+    display.setTextWrap(false);
+    display.setCursor(15, 28);
+    display.print(SongName);
+    display.display();
 }
 void C_DisplayHandler::changeBatteryVoltage(const float battery_voltage)
 {
-    BatteryVoltage = battery_voltage;
+    topBanner.voltage = battery_voltage;
 
-    Display.setTextWrap(false);
-    Display.setTextSize(1);
+    display.setTextSize(1);
 
-    Display.fillRect(109, 0, 128, 12, 0x0000);
-    Display.setCursor(111, 3);
-    Display.println(battery_voltage);
-    Display.display();
+    display.fillRect(93, 6, 20, 7, 0x0000);
+    display.setCursor(94, 11);
+    display.println(battery_voltage);
+    display.display();
 }
 void C_DisplayHandler::changeVolumeLevel(const float volume_level)
 {
-    VolumeLevel = volume_level;
+    topBanner.volume = static_cast<uint8_t>(100*volume_level);
 
-    Display.setTextWrap(false);
+    display.setTextSize(1);
 
-    Display.fillRect(24, 1, 30, 12, 0x0000);
-    Display.setCursor(25, 3);
-    Display.println(VolumeLevel);
-    Display.display();
+    display.fillRect(24, 7, 15, 5, 0x0000);
+    display.setCursor(24, 11);
+    display.print(topBanner.volume);
+    display.display();
 }
 void C_DisplayHandler::drawPause()
 {
-    Display.setTextWrap(false);
-
-    Display.fillRect(55, 2, 30, 10, 0x0000);
-    Display.setCursor(55, 2);
-    Display.println("Psd");
-    Display.display();
+    display.fillEllipse(64, 52, 7, 7, 0);
+    display.drawBitmap(57, 45, image_music_pause_button_bits, 15, 16, 1);
+    display.display();
 }
 void C_DisplayHandler::drawPlay()
 {
-    Display.setTextWrap(false);
-    Display.fillRect(55, 2, 30, 10, 0x0000);
-    Display.setCursor(55, 2);
-    Display.println("Ply");
-    Display.display();
+    display.fillEllipse(64, 52, 7, 7, 0);
+    display.drawBitmap(57, 45, image_music_play_button_bits, 15, 16, 1);
+    display.display();
 }
-void C_DisplayHandler::dimScreen(const bool cond) { Display.dim(cond); }
+void C_DisplayHandler::dimScreen(const bool cond) { display.dim(cond); }
 
 void C_DisplayHandler::drawSongTemplate()
 {
-    Display.clearDisplay();
-    Display.setTextSize(1);
+    display.clearDisplay();
+    drawTopBanner();
 
-    Display.setTextWrap(false);
-    Display.setCursor(87, 3);
-    Display.println("Bat:");
 
-    Display.setCursor(5, 17);
-    Display.println("Now playing:");
 
-    Display.setCursor(2, 3);
-    Display.println("Vol");
-
-    Display.display();
+    // passport_left
+    display.drawBitmap(122, 18, image_passport_left_bits, 6, 46, 1);
+    // earth
+    display.drawBitmap(1, 47, image_earth_bits, 15, 16, 1);
+    // paint 15
+    display.drawBitmap(94, 44, image_paint_15_bits, 28, 27, 1);
+    // paint 15
+    display.drawBitmap(-9, 36, image_paint_15_1_bits, 48, 27, 1);
+    // network
+    display.drawBitmap(41, 49, image_network_bits, 15, 16, 1);
+    // network
+    display.drawBitmap(73, 49, image_network_1_bits, 15, 16, 1);
+    // rect 20
+    display.drawRect(57, 60, 3, 4, 1);
+    // rect 20
+    display.drawRect(69, 60, 3, 4, 1);
+    // rect 22
+    display.drawRect(61, 61, 3, 3, 1);
+    // rect 22
+    display.drawRect(65, 61, 3, 3, 1);
+    display.display();
 }
 void C_DisplayHandler::showSongScreen(const char* song_path,
                                       const float battery_voltage, const float volume_level)
 {
+
+    // Display.setTextSize(1);
+    // Display.setCursor(35, 40);
+    // Display.print("Artist Name");
+    // string 4
+    //Display.setCursor(94, 11);
+
     dimScreen(true);
     drawSongTemplate();
     changeVolumeLevel(volume_level);
@@ -102,23 +149,23 @@ void C_DisplayHandler::showSongScreen(const char* song_path,
 }
 void C_DisplayHandler::drawMenuScreen(const uint8_t selector_positon)
 {
-    Display.clearDisplay();
-    Display.setTextSize(1);
+    display.clearDisplay();
+    display.setTextSize(1);
 
-    Display.setTextWrap(false);
+    display.setTextWrap(false);
 
-    Display.setCursor(4, 18);
-    Display.println("Songs selection");
+    display.setCursor(4, 18);
+    display.println("Songs selection");
 
-    Display.setCursor(4, 33);
-    Display.println("Settings");
+    display.setCursor(4, 33);
+    display.println("Settings");
 
-    Display.setCursor(4, 48);
-    Display.println("Debug info");
+    display.setCursor(4, 48);
+    display.println("Debug info");
 
-    Display.drawRoundRect(2, 16 + selector_positon*15, 95, 12, 3, SSD1306_WHITE);
+    display.drawRoundRect(2, 16 + selector_positon*15, 95, 12, 3, SSD1306_WHITE);
 
-    Display.display();
+    display.display();
 }
 
 void C_DisplayHandler::drawDebugScreen(multi_heap_info_t& info)
@@ -127,109 +174,109 @@ void C_DisplayHandler::drawDebugScreen(multi_heap_info_t& info)
     uint8_t tmp_display_shift = 15;
     heap_caps_get_info(&info, MALLOC_CAP_DEFAULT);
 
-    Display.clearDisplay();
+    display.clearDisplay();
 
-    Display.setTextWrap(false);
-    Display.setCursor(4, 18+tmp_display_shift);
-    Display.println("Free: ");
+    display.setTextWrap(false);
+    display.setCursor(4, 18+tmp_display_shift);
+    display.println("Free: ");
 
-    Display.setCursor(4, 33+tmp_display_shift);
-    Display.println("Allocated: ");
+    display.setCursor(4, 33+tmp_display_shift);
+    display.println("Allocated: ");
 
-    Display.setCursor(68, 18+tmp_display_shift);
-    Display.println(info.total_free_bytes);
+    display.setCursor(68, 18+tmp_display_shift);
+    display.println(info.total_free_bytes);
 
-    Display.setCursor(68, 33+tmp_display_shift);
-    Display.println(info.total_allocated_bytes);
+    display.setCursor(68, 33+tmp_display_shift);
+    display.println(info.total_allocated_bytes);
 
-    Display.setCursor(115, 18+tmp_display_shift);
-    Display.println("B");
+    display.setCursor(115, 18+tmp_display_shift);
+    display.println("B");
 
-    Display.setCursor(115, 33+tmp_display_shift);
-    Display.println("B");
+    display.setCursor(115, 33+tmp_display_shift);
+    display.println("B");
 
 
-    Display.display();
+    display.display();
 }
 
 void C_DisplayHandler::drawSongSelectScreen(const std::array<char*, 3>& DisplaySongArr, uint8_t selector_positon)
 {
-    Display.clearDisplay();
-    Display.setTextSize(1);
+    display.clearDisplay();
+    display.setTextSize(1);
 
-    Display.setTextWrap(false);
+    display.setTextWrap(false);
 
-    Display.setCursor(4, 18);
-    Display.println(DisplaySongArr[0]);
+    display.setCursor(4, 18);
+    display.println(DisplaySongArr[0]);
 
-    Display.setCursor(4, 33);
-    Display.println(DisplaySongArr[1]);
+    display.setCursor(4, 33);
+    display.println(DisplaySongArr[1]);
 
-    Display.setCursor(4, 48);
-    Display.println(DisplaySongArr[2]);
+    display.setCursor(4, 48);
+    display.println(DisplaySongArr[2]);
 
-    Display.drawRoundRect(2, 16 + selector_positon*15, 126, 12, 3, SSD1306_WHITE);
+    display.drawRoundRect(2, 16 + selector_positon*15, 126, 12, 3, SSD1306_WHITE);
 
-    Display.display();
+    display.display();
 }
 
 void C_DisplayHandler::drawSettingsScreen(uint8_t selector_positon)
 {
-    Display.clearDisplay();
-    Display.setTextSize(1);
+    display.clearDisplay();
+    display.setTextSize(1);
 
-    Display.setTextWrap(false);
+    display.setTextWrap(false);
 
-    Display.setCursor(4, 18);
-    Display.println("Default volume");
+    display.setCursor(4, 18);
+    display.println("Default volume");
 
-    Display.setCursor(4, 33);
-    Display.println("Timeout time");
+    display.setCursor(4, 33);
+    display.println("Timeout time");
 
-    Display.drawRoundRect(2, 16 + selector_positon*15, 126, 12, 3, SSD1306_WHITE);
+    display.drawRoundRect(2, selector_positon*15, 126, 12, 3, SSD1306_WHITE);
 
-    Display.display();
+    display.display();
 }
 
 void C_DisplayHandler::drawSettingsDefaultVolume(float volume_level)
 {
-    Display.fillScreen(0x0);
+    display.fillScreen(0x0);
 
-    Display.setTextColor(SSD1306_WHITE);
-    Display.setTextSize(2);
-    Display.setTextWrap(false);
-    Display.setCursor(42, 22);
-    Display.println(volume_level);
+    display.setTextColor(SSD1306_WHITE);
+    display.setTextSize(2);
+    display.setTextWrap(false);
+    display.setCursor(42, 22);
+    display.println(volume_level);
 
-    Display.fillRect(10, 50, 18, 4, SSD1306_WHITE);
+    display.fillRect(10, 50, 18, 4, SSD1306_WHITE);
 
-    Display.fillRect(100, 50, 18, 4, SSD1306_WHITE);
+    display.fillRect(100, 50, 18, 4, SSD1306_WHITE);
 
-    Display.fillRect(107, 43, 4, 18, SSD1306_WHITE);
+    display.fillRect(107, 43, 4, 18, SSD1306_WHITE);
 
-    Display.display();
+    display.display();
 }
 
 void C_DisplayHandler::drawSettingsTimeOut(int timeout)
 {
-    Display.fillScreen(0x0);
+    display.fillScreen(0x0);
 
-    Display.setTextColor(SSD1306_WHITE);
-    Display.setTextSize(3);
-    Display.setTextWrap(false);
-    Display.setCursor(39, 21);
-    Display.println(timeout);
+    display.setTextColor(SSD1306_WHITE);
+    display.setTextSize(3);
+    display.setTextWrap(false);
+    display.setCursor(39, 21);
+    display.println(timeout);
 
-    Display.setCursor(79, 20);
-    Display.println("s");
+    display.setCursor(79, 20);
+    display.println("s");
 
-    Display.fillRect(10, 50, 18, 4, SSD1306_WHITE);
+    display.fillRect(10, 50, 18, 4, SSD1306_WHITE);
 
-    Display.fillRect(100, 50, 18, 4, SSD1306_WHITE);
+    display.fillRect(100, 50, 18, 4, SSD1306_WHITE);
 
-    Display.fillRect(107, 43, 4, 18, SSD1306_WHITE);
+    display.fillRect(107, 43, 4, 18, SSD1306_WHITE);
 
-    Display.display();
+    display.display();
 }
 
 int C_DisplayHandler::getScreenTimeoutSeconds() const
@@ -259,26 +306,26 @@ void C_DisplayHandler::decrementTimeout()
 
 void C_DisplayHandler::displayErrorMessage(const char* error_message, const uint8_t delay_time)
 {
-    Display.clearDisplay();
+    display.clearDisplay();
 
-    Display.setTextWrap(true);
-    Display.setCursor(4, 33);
+    display.setTextWrap(true);
+    display.setCursor(4, 33);
 
-    Display.println(error_message);
-    Display.display();
+    display.println(error_message);
+    display.display();
 
     delay(delay_time*1000);
 }
 
 void C_DisplayHandler::drawOnBoot()
 {
-    Display.clearDisplay();
+    display.clearDisplay();
 
-    Display.setTextSize(3);
-    Display.setCursor(2, 30);
-    Display.setTextColor(WHITE);
-    Display.println("\\(^_^)/");
-    Display.display();
+    display.setTextSize(3);
+    display.setCursor(16, 40);
+    display.setTextColor(WHITE);
+    display.println("\\(^_^)/");
+    display.display();
 }
 char* C_DisplayHandler::parseName(const char* song_path)
 {

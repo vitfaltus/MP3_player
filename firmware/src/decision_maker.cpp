@@ -8,6 +8,14 @@ DecisionMaker::DecisionMaker()
     DisplayHandler = new C_DisplayHandler();
     FileSystemManager = new C_FileSystemManager();
     AudioSettings = new C_AudioSettings();
+
+    AudioSettings->setVolume(FileSystemManager->getDefaultVolume());
+
+    DisplayHandler->setScreenTimeoutSeconds(FileSystemManager->getTimeoutTimeSeconds());
+
+    DisplayHandler->initTopBanner(BatteryManager::getBatteryVoltage(),AudioSettings->getVolume(), FileSystemManager->isFsPresent());
+
+
     SongPlayer = new C_SongPlayer("/");
 
     // setting current song as the one saved in the .current_song
@@ -19,9 +27,6 @@ DecisionMaker::DecisionMaker()
 
     delete[] tmp;
 
-    AudioSettings->setVolume(FileSystemManager->getDefaultVolume());
-
-    DisplayHandler->setScreenTimeoutSeconds(FileSystemManager->getTimeoutTimeSeconds());
 
     DisplayHandler->showSongScreen(SongPlayer->getSongName(),
                                     BatteryManager::getBatteryVoltage(),

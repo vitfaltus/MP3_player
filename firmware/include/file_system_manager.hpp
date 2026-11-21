@@ -20,6 +20,8 @@ class C_FileSystemManager {
     [[nodiscard]] uint8_t getTimeoutTimeSeconds() const;
     void setTimeoutTime(uint8_t time_seconds) const;
 
+    bool isFsPresent() const;
+
 
 
 
