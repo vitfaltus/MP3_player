@@ -22,7 +22,7 @@ class DecisionMaker
     E_DeviceState DeviceState;
 
     // device subsystems
-    C_DisplayHandler* DisplayHandler;
+    DisplayHandler* displayHandler;
     C_FileSystemManager* FileSystemManager;
     C_AudioSettings* AudioSettings;
     C_SongPlayer* SongPlayer;
@@ -67,7 +67,7 @@ class DecisionMaker
 
     void performedAction(InputHandler::ButtonPress buttonPress);
 
-    [[nodiscard]] C_DisplayHandler* getDisplayHandler() const;
+    [[nodiscard]] DisplayHandler* getDisplayHandler() const;
 };
 
 #endif // FIRMWARE_DECISION_MAKER_HPP

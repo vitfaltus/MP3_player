@@ -37,7 +37,7 @@ struct TopBannerState
     bool sdPresent = false;
 };
 
-class C_DisplayHandler
+class DisplayHandler
 {
     Adafruit_SSD1306 display;
 
@@ -55,9 +55,9 @@ class C_DisplayHandler
     void dimScreen(bool cond);
 
 public:
-    C_DisplayHandler();
+    DisplayHandler();
 
-    ~C_DisplayHandler();
+    ~DisplayHandler();
 
     void initTopBanner(float volt, float vol, bool sd);
 

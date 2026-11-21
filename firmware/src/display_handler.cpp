@@ -5,7 +5,7 @@
 
 #include "fonts/Org_01.h"
 
-C_DisplayHandler::C_DisplayHandler()
+DisplayHandler::DisplayHandler()
 {
     this->display = Adafruit_SSD1306(Width, Height, &Wire, -1);
 
@@ -17,12 +17,12 @@ C_DisplayHandler::C_DisplayHandler()
     display.setFont(&Org_01);
     drawOnBoot();
 }
-C_DisplayHandler::~C_DisplayHandler()
+DisplayHandler::~DisplayHandler()
 {
         delete SongName;
 }
 
-void C_DisplayHandler::initTopBanner(const float volt, const float vol, const bool sd)
+void DisplayHandler::initTopBanner(const float volt, const float vol, const bool sd)
 {
     topBanner.voltage = volt;
     topBanner.volume = static_cast<uint8_t>(100*vol);
@@ -31,7 +31,7 @@ void C_DisplayHandler::initTopBanner(const float volt, const float vol, const bo
     drawTopBanner();
 }
 
-void C_DisplayHandler::drawTopBanner()
+void DisplayHandler::drawTopBanner()
 {
     changeBatteryVoltage(topBanner.voltage);
     changeVolumeLevel(0.01f * topBanner.volume);
@@ -51,7 +51,7 @@ void C_DisplayHandler::drawTopBanner()
     display.display();
 }
 
-void C_DisplayHandler::changeSongName(const char* song_path)
+void DisplayHandler::changeSongName(const char* song_path)
 {
     SongName = parseName(song_path);
 
@@ -64,7 +64,7 @@ void C_DisplayHandler::changeSongName(const char* song_path)
     display.print(SongName);
     display.display();
 }
-void C_DisplayHandler::changeBatteryVoltage(const float battery_voltage)
+void DisplayHandler::changeBatteryVoltage(const float battery_voltage)
 {
     topBanner.voltage = battery_voltage;
 
@@ -75,7 +75,7 @@ void C_DisplayHandler::changeBatteryVoltage(const float battery_voltage)
     display.println(battery_voltage);
     display.display();
 }
-void C_DisplayHandler::changeVolumeLevel(const float volume_level)
+void DisplayHandler::changeVolumeLevel(const float volume_level)
 {
     topBanner.volume = static_cast<uint8_t>(100*volume_level);
 
@@ -86,26 +86,25 @@ void C_DisplayHandler::changeVolumeLevel(const float volume_level)
     display.print(topBanner.volume);
     display.display();
 }
-void C_DisplayHandler::drawPause()
+void DisplayHandler::drawPause()
 {
     display.fillEllipse(64, 52, 7, 7, 0);
     display.drawBitmap(57, 45, image_music_pause_button_bits, 15, 16, 1);
     display.display();
 }
-void C_DisplayHandler::drawPlay()
+void DisplayHandler::drawPlay()
 {
     display.fillEllipse(64, 52, 7, 7, 0);
     display.drawBitmap(57, 45, image_music_play_button_bits, 15, 16, 1);
     display.display();
 }
-void C_DisplayHandler::dimScreen(const bool cond) { display.dim(cond); }
+void DisplayHandler::dimScreen(const bool cond) { display.dim(cond); }
 
-void C_DisplayHandler::drawSongTemplate()
+void DisplayHandler::drawSongTemplate()
 {
     display.clearDisplay();
+
     drawTopBanner();
-
-
 
     // passport_left
     display.drawBitmap(122, 18, image_passport_left_bits, 6, 46, 1);
@@ -127,9 +126,10 @@ void C_DisplayHandler::drawSongTemplate()
     display.drawRect(61, 61, 3, 3, 1);
     // rect 22
     display.drawRect(65, 61, 3, 3, 1);
+
     display.display();
 }
-void C_DisplayHandler::showSongScreen(const char* song_path,
+void DisplayHandler::showSongScreen(const char* song_path,
                                       const float battery_voltage, const float volume_level)
 {
 
@@ -147,7 +147,7 @@ void C_DisplayHandler::showSongScreen(const char* song_path,
     drawPause();
     dimScreen(false);
 }
-void C_DisplayHandler::drawMenuScreen(const uint8_t selector_positon)
+void DisplayHandler::drawMenuScreen(const uint8_t selector_positon)
 {
     display.clearDisplay();
     display.setTextSize(1);
@@ -168,7 +168,7 @@ void C_DisplayHandler::drawMenuScreen(const uint8_t selector_positon)
     display.display();
 }
 
-void C_DisplayHandler::drawDebugScreen(multi_heap_info_t& info)
+void DisplayHandler::drawDebugScreen(multi_heap_info_t& info)
 {
 
     uint8_t tmp_display_shift = 15;
@@ -199,7 +199,7 @@ void C_DisplayHandler::drawDebugScreen(multi_heap_info_t& info)
     display.display();
 }
 
-void C_DisplayHandler::drawSongSelectScreen(const std::array<char*, 3>& DisplaySongArr, uint8_t selector_positon)
+void DisplayHandler::drawSongSelectScreen(const std::array<char*, 3>& DisplaySongArr, uint8_t selector_positon)
 {
     display.clearDisplay();
     display.setTextSize(1);
@@ -220,7 +220,7 @@ void C_DisplayHandler::drawSongSelectScreen(const std::array<char*, 3>& DisplayS
     display.display();
 }
 
-void C_DisplayHandler::drawSettingsScreen(uint8_t selector_positon)
+void DisplayHandler::drawSettingsScreen(uint8_t selector_positon)
 {
     display.clearDisplay();
     display.setTextSize(1);
@@ -238,7 +238,7 @@ void C_DisplayHandler::drawSettingsScreen(uint8_t selector_positon)
     display.display();
 }
 
-void C_DisplayHandler::drawSettingsDefaultVolume(float volume_level)
+void DisplayHandler::drawSettingsDefaultVolume(float volume_level)
 {
     display.fillScreen(0x0);
 
@@ -257,7 +257,7 @@ void C_DisplayHandler::drawSettingsDefaultVolume(float volume_level)
     display.display();
 }
 
-void C_DisplayHandler::drawSettingsTimeOut(int timeout)
+void DisplayHandler::drawSettingsTimeOut(int timeout)
 {
     display.fillScreen(0x0);
 
@@ -279,16 +279,16 @@ void C_DisplayHandler::drawSettingsTimeOut(int timeout)
     display.display();
 }
 
-int C_DisplayHandler::getScreenTimeoutSeconds() const
+int DisplayHandler::getScreenTimeoutSeconds() const
 {
     return DimmingTimerMs/1000;
 }
-void C_DisplayHandler::setScreenTimeoutSeconds(const int seconds)
+void DisplayHandler::setScreenTimeoutSeconds(const int seconds)
 {
     DimmingTimerMs = seconds*1000;
 }
 
-void C_DisplayHandler::incrementTimeout()
+void DisplayHandler::incrementTimeout()
 {
     if (DimmingTimerMs < MAX_TIMEOUT_SECONDS*1000)
     {
@@ -296,7 +296,7 @@ void C_DisplayHandler::incrementTimeout()
     }
 }
 
-void C_DisplayHandler::decrementTimeout()
+void DisplayHandler::decrementTimeout()
 {
     if (DimmingTimerMs > MIN_TIMEOUT_SECONDS*1000)
     {
@@ -304,7 +304,7 @@ void C_DisplayHandler::decrementTimeout()
     }
 }
 
-void C_DisplayHandler::displayErrorMessage(const char* error_message, const uint8_t delay_time)
+void DisplayHandler::displayErrorMessage(const char* error_message, const uint8_t delay_time)
 {
     display.clearDisplay();
 
@@ -317,7 +317,7 @@ void C_DisplayHandler::displayErrorMessage(const char* error_message, const uint
     delay(delay_time*1000);
 }
 
-void C_DisplayHandler::drawOnBoot()
+void DisplayHandler::drawOnBoot()
 {
     display.clearDisplay();
 
@@ -327,7 +327,7 @@ void C_DisplayHandler::drawOnBoot()
     display.println("\\(^_^)/");
     display.display();
 }
-char* C_DisplayHandler::parseName(const char* song_path)
+char* DisplayHandler::parseName(const char* song_path)
 {
     size_t last_slash_idx = 0;
     size_t current_idx = 0;
@@ -351,7 +351,7 @@ char* C_DisplayHandler::parseName(const char* song_path)
 }
 
 
-bool C_DisplayHandler::displayDimmingRoutine(
+bool DisplayHandler::displayDimmingRoutine(
     const InputHandler::ButtonPress ButtonInput)
 {
     const unsigned long now_millis = millis();

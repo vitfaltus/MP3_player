@@ -5,15 +5,15 @@ DecisionMaker::DecisionMaker()
 {
     DeviceState = song_playing;
 
-    DisplayHandler = new C_DisplayHandler();
+    displayHandler = new DisplayHandler();
     FileSystemManager = new C_FileSystemManager();
     AudioSettings = new C_AudioSettings();
 
     AudioSettings->setVolume(FileSystemManager->getDefaultVolume());
 
-    DisplayHandler->setScreenTimeoutSeconds(FileSystemManager->getTimeoutTimeSeconds());
+    displayHandler->setScreenTimeoutSeconds(FileSystemManager->getTimeoutTimeSeconds());
 
-    DisplayHandler->initTopBanner(BatteryManager::getBatteryVoltage(),AudioSettings->getVolume(), FileSystemManager->isFsPresent());
+    displayHandler->initTopBanner(BatteryManager::getBatteryVoltage(),AudioSettings->getVolume(), FileSystemManager->isFsPresent());
 
 
     SongPlayer = new C_SongPlayer("/");
@@ -28,7 +28,7 @@ DecisionMaker::DecisionMaker()
     delete[] tmp;
 
 
-    DisplayHandler->showSongScreen(SongPlayer->getSongName(),
+    displayHandler->showSongScreen(SongPlayer->getSongName(),
                                     BatteryManager::getBatteryVoltage(),
                                     AudioSettings->getVolume());
 
@@ -68,14 +68,14 @@ void DecisionMaker::performedAction(const InputHandler::ButtonPress buttonPress)
     }
 }
 
-C_DisplayHandler* DecisionMaker::getDisplayHandler() const
+DisplayHandler* DecisionMaker::getDisplayHandler() const
 {
-    return DisplayHandler;
+    return displayHandler;
 }
 
 void DecisionMaker::songPlayingAction(const InputHandler::ButtonPress buttonPress)
 {
-    if (DisplayHandler->displayDimmingRoutine(buttonPress))
+    if (displayHandler->displayDimmingRoutine(buttonPress))
     {
         return;
     }
@@ -84,11 +84,11 @@ void DecisionMaker::songPlayingAction(const InputHandler::ButtonPress buttonPres
     {
     case InputHandler::LeftButtonPress: // volume down
         AudioSettings->volumeDown();
-        DisplayHandler->changeVolumeLevel(AudioSettings->getVolume());
+        displayHandler->changeVolumeLevel(AudioSettings->getVolume());
         break;
     case InputHandler::LeftButtonLongPress: // previous song
         SongPlayer->playPreviousSong(AudioSettings);
-        DisplayHandler->changeSongName(SongPlayer->getSongName());
+        displayHandler->changeSongName(SongPlayer->getSongName());
         FileSystemManager->setCurrentSongPath(SongPlayer->getSongName());
         break;
     case InputHandler::MiddleButtonPress: // pause/play song
@@ -96,13 +96,13 @@ void DecisionMaker::songPlayingAction(const InputHandler::ButtonPress buttonPres
         {
             SongPlayer->play(AudioSettings);
             AudioSettings->restoreAudio();
-            DisplayHandler->drawPlay();
+            displayHandler->drawPlay();
         }
         else
         {
             SongPlayer->stop();
             AudioSettings->shutAudio();
-            DisplayHandler->drawPause();
+            displayHandler->drawPause();
         }
         break;
     case InputHandler::MiddleButtonLongPress: // change to menu
@@ -113,11 +113,11 @@ void DecisionMaker::songPlayingAction(const InputHandler::ButtonPress buttonPres
         break;
     case InputHandler::RightButtonPress: // volume up
         AudioSettings->volumeUp();
-        DisplayHandler->changeVolumeLevel(AudioSettings->getVolume());
+        displayHandler->changeVolumeLevel(AudioSettings->getVolume());
         break;
     case InputHandler::RightButtonLongPress: // next song
         SongPlayer->playNextSong(AudioSettings);
-        DisplayHandler->changeSongName(SongPlayer->getSongName());
+        displayHandler->changeSongName(SongPlayer->getSongName());
         FileSystemManager->setCurrentSongPath(SongPlayer->getSongName());
         break;
     default:
@@ -125,7 +125,7 @@ void DecisionMaker::songPlayingAction(const InputHandler::ButtonPress buttonPres
     }
     if (SongPlayer->playerLoop(AudioSettings))
     {
-        DisplayHandler->changeSongName(SongPlayer->getSongName());
+        displayHandler->changeSongName(SongPlayer->getSongName());
         FileSystemManager->setCurrentSongPath(SongPlayer->getSongName());
     }
 }
@@ -152,7 +152,7 @@ void DecisionMaker::menuAction(const InputHandler::ButtonPress buttonPress)
             case 2: // debug
                 DeviceState = debug;
                 multi_heap_info_t info;
-                DisplayHandler->drawDebugScreen(info);
+                displayHandler->drawDebugScreen(info);
             break;
 
             default:
@@ -211,7 +211,7 @@ void DecisionMaker::settingsAction(const InputHandler::ButtonPress buttonPress)
     {
     case InputHandler::LeftButtonPress:
         shiftSettingsSelectorUp();
-        DisplayHandler->drawSettingsScreen(SettingsSelectorPosition);
+        displayHandler->drawSettingsScreen(SettingsSelectorPosition);
 
         break;
     case InputHandler::MiddleButtonPress:
@@ -219,12 +219,12 @@ void DecisionMaker::settingsAction(const InputHandler::ButtonPress buttonPress)
         {
         case 0:
             DeviceState = settings_volume;
-            DisplayHandler->drawSettingsDefaultVolume(FileSystemManager->getDefaultVolume());
+            displayHandler->drawSettingsDefaultVolume(FileSystemManager->getDefaultVolume());
             //changeToSettingVolume();
             break;
         case 1:
             DeviceState = settings_timeout;
-            DisplayHandler->drawSettingsTimeOut(FileSystemManager->getTimeoutTimeSeconds());
+            displayHandler->drawSettingsTimeOut(FileSystemManager->getTimeoutTimeSeconds());
             //changeToSettingTimeout();
             break;
         }
@@ -234,7 +234,7 @@ void DecisionMaker::settingsAction(const InputHandler::ButtonPress buttonPress)
         break;
     case InputHandler::RightButtonPress:
         shiftSettingsSelectorDown();
-        DisplayHandler->drawSettingsScreen(SettingsSelectorPosition);
+        displayHandler->drawSettingsScreen(SettingsSelectorPosition);
         break;
     default:
         break;
@@ -247,7 +247,7 @@ void DecisionMaker::settingsVolumeAction(const InputHandler::ButtonPress buttonP
     {
     case InputHandler::LeftButtonPress:
         AudioSettings->volumeDown();
-        DisplayHandler->drawSettingsDefaultVolume(AudioSettings->getVolume());
+        displayHandler->drawSettingsDefaultVolume(AudioSettings->getVolume());
         FileSystemManager->setDefaultVolume(AudioSettings->getVolume());
         break;
     case InputHandler::MiddleButtonPress:
@@ -258,7 +258,7 @@ void DecisionMaker::settingsVolumeAction(const InputHandler::ButtonPress buttonP
         break;
     case InputHandler::RightButtonPress:
         AudioSettings->volumeUp();
-        DisplayHandler->drawSettingsDefaultVolume(AudioSettings->getVolume());
+        displayHandler->drawSettingsDefaultVolume(AudioSettings->getVolume());
         FileSystemManager->setDefaultVolume(AudioSettings->getVolume());
         break;
     default:
@@ -271,9 +271,9 @@ void DecisionMaker::settingsTimeoutAction(const InputHandler::ButtonPress button
     switch (buttonPress)
     {
     case InputHandler::LeftButtonPress:
-        DisplayHandler->decrementTimeout();
-        DisplayHandler->drawSettingsTimeOut(DisplayHandler->getScreenTimeoutSeconds());
-        FileSystemManager->setTimeoutTime(DisplayHandler->getScreenTimeoutSeconds());
+        displayHandler->decrementTimeout();
+        displayHandler->drawSettingsTimeOut(displayHandler->getScreenTimeoutSeconds());
+        FileSystemManager->setTimeoutTime(displayHandler->getScreenTimeoutSeconds());
         break;
     case InputHandler::MiddleButtonPress:
         changeToSettings();
@@ -282,9 +282,9 @@ void DecisionMaker::settingsTimeoutAction(const InputHandler::ButtonPress button
         changeToSettings();
         break;
     case InputHandler::RightButtonPress:
-        DisplayHandler->incrementTimeout();
-        DisplayHandler->drawSettingsTimeOut(DisplayHandler->getScreenTimeoutSeconds());
-        FileSystemManager->setTimeoutTime(DisplayHandler->getScreenTimeoutSeconds());
+        displayHandler->incrementTimeout();
+        displayHandler->drawSettingsTimeOut(displayHandler->getScreenTimeoutSeconds());
+        FileSystemManager->setTimeoutTime(displayHandler->getScreenTimeoutSeconds());
         break;
     default:
         break;
@@ -303,7 +303,7 @@ void DecisionMaker::shiftMenuSelectorUp()
     if (MenuSelectorPosition > 0) {
         MenuSelectorPosition--;
     }
-    DisplayHandler->drawMenuScreen(MenuSelectorPosition);
+    displayHandler->drawMenuScreen(MenuSelectorPosition);
 
 }
 
@@ -312,31 +312,31 @@ void DecisionMaker::shiftMenuSelectorDown()
     if (MenuSelectorPosition < 2) {
         MenuSelectorPosition++;
     }
-    DisplayHandler->drawMenuScreen(MenuSelectorPosition);
+    displayHandler->drawMenuScreen(MenuSelectorPosition);
 }
 
 void DecisionMaker::changeToMenu()
 {
     DeviceState = menu;
     MenuSelectorPosition = 0;
-    DisplayHandler->drawMenuScreen(MenuSelectorPosition);
+    displayHandler->drawMenuScreen(MenuSelectorPosition);
 }
 
 void DecisionMaker::fetchAndDisplaySongs()
 {
     if (!SongPlayer->getThreeSongNames(SongSelectSelectorPosition, DisplaySongArr))
     {
-        DisplayHandler->displayErrorMessage("Song display error", 3);
+        displayHandler->displayErrorMessage("Song display error", 3);
         changeToMenu();
         return;
     }
     if (SongSelectSelectorPosition == 0)
     {
-        DisplayHandler->drawSongSelectScreen(DisplaySongArr, 0);
+        displayHandler->drawSongSelectScreen(DisplaySongArr, 0);
     }
     else
     {
-        DisplayHandler->drawSongSelectScreen(DisplaySongArr, 1);
+        displayHandler->drawSongSelectScreen(DisplaySongArr, 1);
     }
 
 }
@@ -358,11 +358,11 @@ void DecisionMaker::shiftSongSelectorDown()
 void DecisionMaker::changeToSongPlaying()
 {
     DeviceState = song_playing;
-    DisplayHandler->showSongScreen(SongPlayer->getSongName(),
+    displayHandler->showSongScreen(SongPlayer->getSongName(),
                                BatteryManager::getBatteryVoltage(),
                                AudioSettings->getVolume());
     //reset the dimming timer
-    DisplayHandler->displayDimmingRoutine(InputHandler::ButtonPress::MiddleButtonPress);
+    displayHandler->displayDimmingRoutine(InputHandler::ButtonPress::MiddleButtonPress);
 }
 
 void DecisionMaker::shiftSettingsSelectorUp()
@@ -385,7 +385,7 @@ void DecisionMaker::shiftSettingsSelectorDown()
 void DecisionMaker::changeToSettings()
 {
     DeviceState = settings;
-    DisplayHandler->drawSettingsScreen(SettingsSelectorPosition);
+    displayHandler->drawSettingsScreen(SettingsSelectorPosition);
 }
 
 
